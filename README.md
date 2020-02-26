@@ -2,6 +2,7 @@
 
 [![License](https://img.shields.io/:license-mit-blue.svg)](http://doge.mit-license.org)
 [![NPM version](https://badge.fury.io/js/keycloak-mock.svg)](http://badge.fury.io/js/keycloak-mock)
+![test](https://github.com/SectorLabs/keycloak-mock/workflows/test/badge.svg)
 
 A minimal mock for a Keycloak server to be used in unit tests.
 
