@@ -21,18 +21,21 @@ This does not launch an actual HTTP server. It uses [`nock`](https://github.com/
         authServerURL: "https://myserver.com/auth",
         realm: "myrealm",
         clientID: "client-1",
-    })
+    });
 
     // all requests to `https://myserver.com/auth` will now be
     // intercepted and replied to
     const mock = KeycloakMock.activateMock(keycloak);
 
     // create a user and a token for it
-    const user = keycloak.database.createUser({ name: 'test', email: 'hello@hello.com' });
+    const user = keycloak.database.createUser({ name: "test", email: "hello@hello.com" });
     const token = keycloak.createBearerToken(user.sub);
 
+    // get active mock without a reference
+    const sameMock = KeycloakMock.getMock("https://myserver.com/auth");
+
     // de-activate the mock
-    KeycloakMock.deactivateMock(mock);
+    KeycloakMock.deactivateMock(sameMock);
 
 ## Custom handlers
 
@@ -42,13 +45,13 @@ This does not launch an actual HTTP server. It uses [`nock`](https://github.com/
         authServerURL: "https://myserver.com/auth",
         realm: "myrealm",
         clientID: "client-1",
-    })
+    });
 
     keycloak.activateMock(keycloak, {
        listCertificatesView: (instance, request) => {
-           return Promise.resolve([500, '']);
+           return Promise.resolve([500, ""]);
        },
        getUserInfoView: (instance, request) => {
-           return Promise.resolve([500, '']);
+           return Promise.resolve([500, ""]);
        },
     })

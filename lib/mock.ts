@@ -4,8 +4,11 @@ import { MockInstance } from "./instance";
 
 import { ViewFn, listCertificates, getUserInfo } from "./views";
 
+let __activeMocks__: Map<string, Mock> = new Map<string, Mock>();
+
 export interface Mock {
   scope: Scope;
+  instance: MockInstance;
 }
 
 export interface MockOptions {
@@ -14,9 +17,16 @@ export interface MockOptions {
 }
 
 const activateMock = (instance: MockInstance, options?: MockOptions): Mock => {
-  const scope = nock(instance.params.authServerURL)
+  const { authServerURL, realm } = instance.params;
+
+  const existingMock = __activeMocks__.get(authServerURL);
+  if (existingMock) {
+    throw new Error(`There is an existing mock active for ${authServerURL}`);
+  }
+
+  const scope = nock(authServerURL)
     .persist()
-    .get(`/realms/${instance.params.realm}/protocol/openid-connect/certs`)
+    .get(`/realms/${realm}/protocol/openid-connect/certs`)
     .reply(function() {
       if (options && options.listCertificatesView) {
         return options.listCertificatesView(instance, this.req);
@@ -24,7 +34,7 @@ const activateMock = (instance: MockInstance, options?: MockOptions): Mock => {
 
       return listCertificates(instance, this.req);
     })
-    .get(`/realms/${instance.params.realm}/protocol/openid-connect/userinfo`)
+    .get(`/realms/${realm}/protocol/openid-connect/userinfo`)
     .reply(function() {
       if (options && options.getUserInfoView) {
         return options.getUserInfoView(instance, this.req);
@@ -33,10 +43,22 @@ const activateMock = (instance: MockInstance, options?: MockOptions): Mock => {
       return getUserInfo(instance, this.req);
     });
 
-  return { scope };
+  const mock = { scope, instance };
+  __activeMocks__.set(authServerURL, mock);
+
+  return mock;
 };
 
 const deactivateMock = (mock: Mock): void => {
+  const { authServerURL } = mock.instance.params;
+
+  const existingMock = __activeMocks__.get(authServerURL);
+  if (!existingMock) {
+    throw new Error(`No active mock for ${authServerURL}`);
+  }
+
+  __activeMocks__.delete(authServerURL);
+
   mock.scope.persist(false);
 
   // @ts-ignore
@@ -46,4 +68,13 @@ const deactivateMock = (mock: Mock): void => {
   mock.scope.interceptors = [];
 };
 
-export { activateMock, deactivateMock };
+const getMock = (authServerURL: string): Mock => {
+  const mock = __activeMocks__.get(authServerURL);
+  if (!mock) {
+    throw new Error(`No active mock for ${authServerURL}`);
+  }
+
+  return mock;
+};
+
+export { activateMock, deactivateMock, getMock };
