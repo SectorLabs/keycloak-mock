@@ -77,4 +77,8 @@ const getMock = (authServerURL: string): Mock => {
   return mock;
 };
 
-export { activateMock, deactivateMock, getMock };
+const getMockInstance = (authServerURL: string): MockInstance => {
+  return getMock(authServerURL).instance;
+};
+
+export { activateMock, deactivateMock, getMock, getMockInstance };

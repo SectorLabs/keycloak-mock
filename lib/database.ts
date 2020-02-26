@@ -27,6 +27,10 @@ class MockDatabase {
     return this.users.find((storedUser) => storedUser.sub === sub) || null;
   }
 
+  clear(): void {
+    this.users = [];
+  }
+
   /**
    * Creates a new user and returns the profile of the newly created user.
    */
