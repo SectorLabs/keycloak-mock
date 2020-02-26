@@ -17,7 +17,7 @@ This does not launch an actual HTTP server. It uses [`nock`](https://github.com/
 ### Basic
     import * as KeycloakMock from "keycloak-node-mock";
 
-    const keycloak = KeycloakMock.createMockInstance({
+    const keycloak = await KeycloakMock.createMockInstance({
         authServerURL: "https://myserver.com/auth",
         realm: "myrealm",
         clientID: "client-1",
@@ -34,6 +34,12 @@ This does not launch an actual HTTP server. It uses [`nock`](https://github.com/
     // get active mock without a reference
     const sameMock = KeycloakMock.getMock("https://myserver.com/auth");
 
+    // clear user database
+    mock.instance.database.clear();
+
+    // find user profile
+    const sameUser = mock.instance.database.findUserByID(user.sub);
+
     // de-activate the mock
     KeycloakMock.deactivateMock(sameMock);
 
@@ -41,7 +47,7 @@ This does not launch an actual HTTP server. It uses [`nock`](https://github.com/
 
     import * as KeycloakMock from "keycloak-node-mock";
 
-    const keycloak = KeycloakMock.createMockInstance({
+    const keycloak = await KeycloakMock.createMockInstance({
         authServerURL: "https://myserver.com/auth",
         realm: "myrealm",
         clientID: "client-1",
