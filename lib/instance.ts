@@ -1,9 +1,7 @@
 import { JWK } from "node-jose";
 
-import MockDatabase from "./database";
-
 import createBearerToken from "./createBearerToken";
-import { MockUserProfile, CreateMockUserProfileOptions } from "./database";
+import MockDatabase, { MockUserProfile, CreateMockUserProfileOptions } from "./database";
 
 export interface CreateMockInstanceOptions {
   authServerURL: string;
@@ -36,8 +34,13 @@ class MockInstance {
   }
 
   createBearerToken(sub: string, expiresIn: number = 3600): string {
+    const user = this.database.findUserByID(sub);
+    if (!user) {
+      throw new Error("Cannot create bearer token for non-existen user");
+    }
+
     return createBearerToken({
-      sub,
+      user,
       key: this.defaultKey,
       expiresIn,
       realm: this.params.realm,
