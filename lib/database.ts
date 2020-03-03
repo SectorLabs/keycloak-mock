@@ -1,6 +1,7 @@
 import { v4 as uuidv4 } from "uuid";
 
 export interface CreateMockUserProfileOptions {
+  sub?: string;
   name: string;
   email: string;
 }
@@ -35,13 +36,14 @@ class MockDatabase {
    * Creates a new user and returns the profile of the newly created user.
    */
   createUser(options?: CreateMockUserProfileOptions): MockUserProfile {
+    const sub = options ? options.sub : uuidv4();
     const name = options ? options.name : "Henk Jansen";
     const email = options ? options.email : "henk@gmail.com";
 
     const [givenName, familyName] = name.split(" ");
 
     const profile: MockUserProfile = {
-      sub: uuidv4(),
+      sub: sub || uuidv4(),
       email,
       name,
       email_verified: true,
