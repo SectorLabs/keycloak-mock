@@ -8,10 +8,11 @@
     "lib": ["es6"],
     "strict": true,
     "target": "es5",
-    "baseUrl": ".",
+    "baseUrl": "./",
     "outDir": "./dist",
     "declaration": true,
     "declarationDir": "./dist"
   },
-  "exclude": ["./dist"]
+  "exclude": ["./dist"],
+  "include": ["./lib/*"]
 }
