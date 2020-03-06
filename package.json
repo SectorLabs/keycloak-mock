@@ -6,6 +6,9 @@
   "repository": "https://github.com/SectorLabs/keycloak-mock",
   "author": "Sector Labs <open-source@sectorlabs.ro>",
   "license": "MIT",
+  "engines": {
+    "node": ">=8.0.0"
+  },
   "scripts": {
     "build": "tsc",
     "test": "jest -i tests/",
