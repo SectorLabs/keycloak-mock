@@ -58,12 +58,14 @@ Tested with Node.js 8.x, 10.x, 12.x, 13.x
 
     keycloak.activateMock(keycloak, {
        listCertificatesView: (instance, request) => {
-           return Promise.resolve([500, ""]);
+           return [500, ""];
        },
        getUser: (instance, request) => {
-           return Promise.resolve([500, ""]);
+           // might be null if not authorized
+           console.log(request.user);
+           return [500, ""];
        },
        getUserInfoView: (instance, request) => {
-           return Promise.resolve([500, ""]);
+           return [500, ""];
        },
     })
