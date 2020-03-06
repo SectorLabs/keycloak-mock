@@ -2,7 +2,7 @@ import nock, { Scope } from "nock";
 
 import { MockInstance } from "./instance";
 
-import { ViewFn, listCertificates, getUserInfo } from "./views";
+import { ViewFn, listCertificates, getUser, getUserInfo } from "./views";
 
 let __activeMocks__: Map<string, Mock> = new Map<string, Mock>();
 
@@ -13,6 +13,7 @@ export interface Mock {
 
 export interface MockOptions {
   listCertificatesView?: ViewFn;
+  getUserView?: ViewFn;
   getUserInfoView?: ViewFn;
 }
 
@@ -33,6 +34,14 @@ const activateMock = (instance: MockInstance, options?: MockOptions): Mock => {
       }
 
       return listCertificates(instance, this.req);
+    })
+    .get(new RegExp(`/admin/realms/${realm}/users/(.+)`))
+    .reply(function() {
+      if (options && options.getUserView) {
+        return options.getUserView(instance, this.req);
+      }
+
+      return getUser(instance, this.req);
     })
     .get(`/realms/${realm}/protocol/openid-connect/userinfo`)
     .reply(function() {

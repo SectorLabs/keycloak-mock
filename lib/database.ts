@@ -4,6 +4,7 @@ export interface CreateMockUserProfileOptions {
   sub?: string;
   name: string;
   email: string;
+  attributes?: {};
 }
 
 export interface MockUserProfile {
@@ -15,6 +16,8 @@ export interface MockUserProfile {
   given_name: string;
   family_name: string;
   email_verified: boolean;
+  created_at: number;
+  attributes: {};
 }
 
 class MockDatabase {
@@ -39,6 +42,7 @@ class MockDatabase {
     const sub = options ? options.sub : uuidv4();
     const name = options ? options.name : "Henk Jansen";
     const email = options ? options.email : "henk@gmail.com";
+    const attributes = options ? options.attributes : {};
 
     const [givenName, familyName] = name.split(" ");
 
@@ -51,6 +55,8 @@ class MockDatabase {
       given_name: givenName,
       family_name: familyName,
       preferred_username: email,
+      created_at: new Date().getTime(),
+      attributes: attributes || {},
     };
 
     this.users.push(profile);
