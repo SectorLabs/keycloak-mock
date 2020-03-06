@@ -9,6 +9,12 @@ type NockClientRequest = ClientRequest & {
   headers: Record<string, string>;
 };
 
-export type ViewFn = (instance: MockInstance, request: NockClientRequest) => NockClientResponse;
+export type ViewFn = (
+  instance: MockInstance,
+  request: NockClientRequest
+) => NockClientResponse;
 
-export type MiddlewareFn = (instance: MockInstance, request: NockClientRequest) => Promise<void>;
+export type MiddlewareFn = (
+  instance: MockInstance,
+  request: NockClientRequest
+) => Promise<void>;

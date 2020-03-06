@@ -1,5 +1,5 @@
 import axios from "axios";
-import { v4 as uuidv4 } from 'uuid';
+import { v4 as uuidv4 } from "uuid";
 
 import * as KeycloakMock from "../lib";
 import { setupBefore, teardownAfter, getMockInstance } from "./util";
@@ -22,9 +22,13 @@ describe("getUserInfo", () => {
     const user = kmock.database.users[0];
     const token = kmock.createBearerToken(user.sub);
 
-    const url = kmock.createURL("/realms/myrealm/protocol/openid-connect/userinfo");
+    const url = kmock.createURL(
+      "/realms/myrealm/protocol/openid-connect/userinfo"
+    );
 
-    const response = await axios.get(url, { headers: { authorization: `Bearer ${token}` } });
+    const response = await axios.get(url, {
+      headers: { authorization: `Bearer ${token}` },
+    });
 
     // hack out created_at because it keeps changing
     const responseData = { ...response.data, created_at: 1 };

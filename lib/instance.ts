@@ -1,7 +1,10 @@
 import { JWK } from "node-jose";
 
 import createBearerToken from "./createBearerToken";
-import MockDatabase, { MockUserProfile, CreateMockUserProfileOptions } from "./database";
+import MockDatabase, {
+  MockUserProfile,
+  CreateMockUserProfileOptions,
+} from "./database";
 
 export interface CreateMockInstanceOptions {
   authServerURL: string;
@@ -54,7 +57,9 @@ class MockInstance {
   }
 }
 
-const createMockInstance = async (options: CreateMockInstanceOptions): Promise<MockInstance> => {
+const createMockInstance = async (
+  options: CreateMockInstanceOptions
+): Promise<MockInstance> => {
   const store = JWK.createKeyStore();
   const defaultKey = await store.generate("RSA", 2048, { use: "sig" });
 

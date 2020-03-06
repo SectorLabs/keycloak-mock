@@ -9,7 +9,9 @@ describe("listCertificates", () => {
 
   it("works without token", async () => {
     const kmock = getMockInstance();
-    const url = kmock.createURL("/realms/myrealm/protocol/openid-connect/certs");
+    const url = kmock.createURL(
+      "/realms/myrealm/protocol/openid-connect/certs"
+    );
 
     const response = await axios.get(url);
 
@@ -26,9 +28,13 @@ describe("listCertificates", () => {
     const user = kmock.database.users[0];
     const token = kmock.createBearerToken(user.sub);
 
-    const url = kmock.createURL("/realms/myrealm/protocol/openid-connect/certs");
+    const url = kmock.createURL(
+      "/realms/myrealm/protocol/openid-connect/certs"
+    );
 
-    const response = await axios.get(url, { headers: { authorization: `Bearer ${token}` } });
+    const response = await axios.get(url, {
+      headers: { authorization: `Bearer ${token}` },
+    });
 
     expect(response.data.keys).toHaveLength(1);
     expect(response.data.keys[0].kty).toBe("RSA");

@@ -1,5 +1,5 @@
 import axios from "axios";
-import { v4 as uuidv4 } from 'uuid';
+import { v4 as uuidv4 } from "uuid";
 
 import * as KeycloakMock from "../lib";
 import { setupBefore, teardownAfter, getMockInstance } from "./util";
@@ -24,7 +24,9 @@ describe("getUser", () => {
 
     const url = kmock.createURL(`/admin/realms/myrealm/users/${user.sub}`);
 
-    const response = await axios.get(url, { headers: { authorization: `Bearer ${token}` } });
+    const response = await axios.get(url, {
+      headers: { authorization: `Bearer ${token}` },
+    });
 
     // hack out createdTimestamp because it keeps changing
     const responseData = { ...response.data, createdTimestamp: 1 };
