@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`getUserInfo works 1`] = `
+exports[`getUserInfo works with token 1`] = `
 Object {
   "attributes": Object {},
   "created_at": 1,

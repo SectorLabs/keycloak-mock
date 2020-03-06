@@ -7,7 +7,20 @@ describe("listCertificates", () => {
   beforeAll(setupBefore);
   afterAll(teardownAfter);
 
-  it("works", async () => {
+  it("works without token", async () => {
+    const kmock = getMockInstance();
+    const url = kmock.createURL("/realms/myrealm/protocol/openid-connect/certs");
+
+    const response = await axios.get(url);
+
+    expect(response.data.keys).toHaveLength(1);
+    expect(response.data.keys[0].kty).toBe("RSA");
+    expect(response.data.keys[0].use).toBe("sig");
+    expect(response.data.keys[0].kid).toBeTruthy();
+    expect(response.data.keys[0].n).toBeTruthy();
+  });
+
+  it("works with token", async () => {
     const kmock = getMockInstance();
 
     const user = kmock.database.users[0];
