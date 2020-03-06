@@ -1,2 +1,13 @@
 node_modules/
+
 tests/
+
+jest.config.js
+tsconfig.js
+LICENSE
+README.md
+
+.prettierrc
+.prettierignore
+
+.github/
