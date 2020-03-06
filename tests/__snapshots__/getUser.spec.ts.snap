@@ -9,7 +9,11 @@ Object {
     "mapRoles": true,
     "view": true,
   },
-  "attributes": Object {},
+  "attributes": Object {
+    "gender": Array [
+      "male",
+    ],
+  },
   "createdTimestamp": 1,
   "disableableCredentialTypes": Array [
     "password",
@@ -23,7 +27,7 @@ Object {
   "lastName": "Jansen",
   "notBefore": 0,
   "requiredActions": Array [],
-  "totp": false,
-  "username": "henk@gmail.com",
+  "totp": true,
+  "username": "henk.jansen@gmail.com",
 }
 `;

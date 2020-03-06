@@ -20,9 +20,9 @@ describe("getUser", () => {
     const kmock = getMockInstance();
 
     const user = kmock.database.users[0];
-    const token = kmock.createBearerToken(user.sub);
+    const token = kmock.createBearerToken(user.id);
 
-    const url = kmock.createURL(`/admin/realms/myrealm/users/${user.sub}`);
+    const url = kmock.createURL(`/admin/realms/myrealm/users/${user.id}`);
 
     const response = await axios.get(url, {
       headers: { authorization: `Bearer ${token}` },

@@ -10,8 +10,9 @@ const setupBefore = async () => {
   KeycloakMock.activateMock(instance);
 
   instance.database.createUser({
-    sub: "4255c2ae-3f11-4a26-a401-3981c8845df3",
-    name: "Henk Jansen",
+    id: "4255c2ae-3f11-4a26-a401-3981c8845df3",
+    firstName: "Henk",
+    lastName: "Jansen",
     email: "henk@gmail.com",
   });
 };

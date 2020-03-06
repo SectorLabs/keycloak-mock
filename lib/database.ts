@@ -1,23 +1,39 @@
 import { v4 as uuidv4 } from "uuid";
+import isNil from "lodash/isNil";
+
+export type CreateMockUserProfileOptionsAttributes = {
+  [key: string]: [string];
+};
 
 export interface CreateMockUserProfileOptions {
-  sub?: string;
-  name: string;
-  email: string;
-  attributes?: {};
+  id?: string;
+  createdTimestamp?: number;
+  username?: string;
+  enabled?: boolean;
+  totp?: boolean;
+  emailVerified?: boolean;
+  firstName?: string;
+  lastName?: string;
+  email?: string;
+  attributes?: CreateMockUserProfileOptionsAttributes;
 }
 
+export type MockUserProfileAttributes = {
+  gender: [string];
+  [key: string]: [string];
+};
+
 export interface MockUserProfile {
-  sub: string;
-  name: string;
+  id: string;
+  createdTimestamp: number;
+  username: string;
+  enabled: boolean;
+  totp: boolean;
+  emailVerified: boolean;
+  firstName: string;
+  lastName: string;
   email: string;
-  gender: "male" | "female";
-  preferred_username: string;
-  given_name: string;
-  family_name: string;
-  email_verified: boolean;
-  created_at: number;
-  attributes: {};
+  attributes: MockUserProfileAttributes;
 }
 
 class MockDatabase {
@@ -27,8 +43,8 @@ class MockDatabase {
     this.users = [];
   }
 
-  findUserByID(sub: string): MockUserProfile | null {
-    return this.users.find((storedUser) => storedUser.sub === sub) || null;
+  findUserByID(id: string): MockUserProfile | null {
+    return this.users.find((storedUser) => storedUser.id === id) || null;
   }
 
   clear(): void {
@@ -39,24 +55,27 @@ class MockDatabase {
    * Creates a new user and returns the profile of the newly created user.
    */
   createUser(options?: CreateMockUserProfileOptions): MockUserProfile {
-    const sub = options ? options.sub : uuidv4();
-    const name = options ? options.name : "Henk Jansen";
-    const email = options ? options.email : "henk@gmail.com";
-    const attributes = options ? options.attributes : {};
-
-    const [givenName, familyName] = name.split(" ");
+    const finalizedOptions = options || {};
 
     const profile: MockUserProfile = {
-      sub: sub || uuidv4(),
-      email,
-      name,
-      email_verified: true,
-      gender: "male",
-      given_name: givenName,
-      family_name: familyName,
-      preferred_username: email,
-      created_at: new Date().getTime(),
-      attributes: attributes || {},
+      id: finalizedOptions.id || uuidv4(),
+      createdTimestamp:
+        finalizedOptions.createdTimestamp || new Date().getTime(),
+      username: finalizedOptions.username || "henk.jansen@gmail.com",
+      enabled: isNil(finalizedOptions.enabled)
+        ? true
+        : finalizedOptions.enabled,
+      totp: isNil(finalizedOptions.totp) ? true : finalizedOptions.totp,
+      emailVerified: isNil(finalizedOptions.emailVerified)
+        ? true
+        : finalizedOptions.emailVerified,
+      firstName: finalizedOptions.firstName || "Henk",
+      lastName: finalizedOptions.lastName || "Jansen",
+      email: finalizedOptions.email || "henk.jansen@gmail.com",
+      attributes: {
+        gender: ["male"],
+        ...(finalizedOptions.attributes || {}),
+      },
     };
 
     this.users.push(profile);

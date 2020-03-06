@@ -2,7 +2,6 @@
 
 exports[`getUserInfo works with token 1`] = `
 Object {
-  "attributes": Object {},
   "created_at": 1,
   "email": "henk@gmail.com",
   "email_verified": true,
@@ -10,7 +9,7 @@ Object {
   "gender": "male",
   "given_name": "Henk",
   "name": "Henk Jansen",
-  "preferred_username": "henk@gmail.com",
+  "preferred_username": "henk.jansen@gmail.com",
   "sub": "4255c2ae-3f11-4a26-a401-3981c8845df3",
 }
 `;

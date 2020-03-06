@@ -11,16 +11,8 @@ const getUser: ViewFn = (instance, request) => {
   return [
     200,
     {
-      id: user.sub,
-      firstName: user.given_name,
-      lastName: user.family_name,
-      username: user.preferred_username,
-      email: user.email,
-      enabled: true,
-      totp: false,
-      emailVerified: user.email_verified,
-      createdTimestamp: user.created_at,
-      attributes: user.attributes,
+      ...user,
+      // TODO: make these configurable
       disableableCredentialTypes: ["password"],
       requiredActions: [],
       federatedIdentities: [],
