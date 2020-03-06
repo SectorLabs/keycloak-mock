@@ -33,6 +33,10 @@ class MockInstance {
     this.params = params;
   }
 
+  createURL(path: string): string {
+    return `${this.params.authServerURL}${path}`;
+  }
+
   createBearerToken(sub: string, expiresIn: number = 3600): string {
     const user = this.database.findUserByID(sub);
     if (!user) {
