@@ -8,7 +8,7 @@ import { MockInstance } from "../instance";
 import { ViewFn } from "./types";
 
 const getUser: ViewFn = async (instance, request) => {
-  const token = (head(request.headers.authorization) || "").split(" ")[1];
+  const token = (request.headers.authorization || "").split(" ")[1];
   if (!token) {
     return [401, "Authorization required"];
   }

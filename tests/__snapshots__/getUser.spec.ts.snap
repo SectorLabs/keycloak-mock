@@ -1,0 +1,29 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`getUser works 1`] = `
+Object {
+  "access": Object {
+    "impersonate": false,
+    "manage": true,
+    "manageGroupMembership": true,
+    "mapRoles": true,
+    "view": true,
+  },
+  "attributes": Object {},
+  "createdTimestamp": 1,
+  "disableableCredentialTypes": Array [
+    "password",
+  ],
+  "email": "henk@gmail.com",
+  "emailVerified": true,
+  "enabled": true,
+  "federatedIdentities": Array [],
+  "firstName": "Henk",
+  "id": "4255c2ae-3f11-4a26-a401-3981c8845df3",
+  "lastName": "Jansen",
+  "notBefore": 0,
+  "requiredActions": Array [],
+  "totp": false,
+  "username": "henk@gmail.com",
+}
+`;
