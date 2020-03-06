@@ -1,8 +1,9 @@
 import nock, { Scope } from "nock";
 
+import { ViewFn } from "./types";
 import { MockInstance } from "./instance";
-
-import { ViewFn, listCertificates, getUser, getUserInfo } from "./views";
+import { decodeTokenAndAttachUser } from "./middlewares";
+import { listCertificates, getUser, getUserInfo } from "./views";
 
 let __activeMocks__: Map<string, Mock> = new Map<string, Mock>();
 
@@ -28,7 +29,9 @@ const activateMock = (instance: MockInstance, options?: MockOptions): Mock => {
   const scope = nock(authServerURL)
     .persist()
     .get(`/realms/${realm}/protocol/openid-connect/certs`)
-    .reply(function() {
+    .reply(async function() {
+      await decodeTokenAndAttachUser(instance, this.req);
+
       if (options && options.listCertificatesView) {
         return options.listCertificatesView(instance, this.req);
       }
@@ -36,7 +39,9 @@ const activateMock = (instance: MockInstance, options?: MockOptions): Mock => {
       return listCertificates(instance, this.req);
     })
     .get(new RegExp(`/admin/realms/${realm}/users/(.+)`))
-    .reply(function() {
+    .reply(async function() {
+      await decodeTokenAndAttachUser(instance, this.req);
+
       if (options && options.getUserView) {
         return options.getUserView(instance, this.req);
       }
@@ -44,7 +49,9 @@ const activateMock = (instance: MockInstance, options?: MockOptions): Mock => {
       return getUser(instance, this.req);
     })
     .get(`/realms/${realm}/protocol/openid-connect/userinfo`)
-    .reply(function() {
+    .reply(async function() {
+      await decodeTokenAndAttachUser(instance, this.req);
+
       if (options && options.getUserInfoView) {
         return options.getUserInfoView(instance, this.req);
       }
