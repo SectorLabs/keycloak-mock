@@ -6,7 +6,7 @@ Object {
   "email": "henk@gmail.com",
   "email_verified": true,
   "family_name": "Jansen",
-  "gender": "male",
+  "gender": null,
   "given_name": "Henk",
   "name": "Henk Jansen",
   "preferred_username": "henk.jansen@gmail.com",

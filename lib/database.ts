@@ -1,7 +1,7 @@
 import { v4 as uuidv4 } from "uuid";
 import isNil from "lodash/isNil";
 
-export type CreateMockUserProfileOptionsAttributes = {
+export type MockUserProfileAttributes = {
   [key: string]: [string];
 };
 
@@ -15,13 +15,8 @@ export interface CreateMockUserProfileOptions {
   firstName?: string;
   lastName?: string;
   email?: string;
-  attributes?: CreateMockUserProfileOptionsAttributes;
+  attributes?: MockUserProfileAttributes;
 }
-
-export type MockUserProfileAttributes = {
-  gender: [string];
-  [key: string]: [string];
-};
 
 export interface MockUserProfile {
   id: string;
@@ -73,7 +68,6 @@ class MockDatabase {
       lastName: finalizedOptions.lastName || "Jansen",
       email: finalizedOptions.email || "henk.jansen@gmail.com",
       attributes: {
-        gender: ["male"],
         ...(finalizedOptions.attributes || {}),
       },
     };

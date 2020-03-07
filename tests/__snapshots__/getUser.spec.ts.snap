@@ -9,11 +9,7 @@ Object {
     "mapRoles": true,
     "view": true,
   },
-  "attributes": Object {
-    "gender": Array [
-      "male",
-    ],
-  },
+  "attributes": Object {},
   "createdTimestamp": 1,
   "disableableCredentialTypes": Array [
     "password",
