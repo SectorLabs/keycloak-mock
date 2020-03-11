@@ -10,6 +10,12 @@ export interface CreateMockInstanceOptions {
   authServerURL: string;
   clientID: string;
   realm: string;
+
+  /**
+   * Default is 2048. Set to a lower number to speed
+   * up tests. Absolute minimum is 512.
+   */
+  keySize?: number;
 }
 
 export interface MockInstanceParams {
@@ -61,7 +67,9 @@ const createMockInstance = async (
   options: CreateMockInstanceOptions
 ): Promise<MockInstance> => {
   const store = JWK.createKeyStore();
-  const defaultKey = await store.generate("RSA", 2048, { use: "sig" });
+
+  const keySize = options.keySize || 2048;
+  const defaultKey = await store.generate("RSA", keySize, { use: "sig" });
 
   return new MockInstance(store, defaultKey, new MockDatabase(), {
     authServerURL: options.authServerURL,
