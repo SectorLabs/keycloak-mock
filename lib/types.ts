@@ -18,3 +18,9 @@ export type MiddlewareFn = (
   instance: MockInstance,
   request: NockClientRequest
 ) => Promise<void>;
+
+export type PostFn = (
+  instance: MockInstance,
+  request: NockClientRequest,
+  body: string | Record<string, any>
+) => NockClientResponse;

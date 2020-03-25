@@ -14,6 +14,7 @@ const setupBefore = async () => {
     firstName: "Henk",
     lastName: "Jansen",
     email: "henk@gmail.com",
+    password: "testPassword!",
   });
 };
 
