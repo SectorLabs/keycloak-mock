@@ -15,6 +15,7 @@ export interface CreateMockUserProfileOptions {
   firstName?: string;
   lastName?: string;
   email?: string;
+  password?: string;
   attributes?: MockUserProfileAttributes;
 }
 
@@ -28,6 +29,7 @@ export interface MockUserProfile {
   firstName: string;
   lastName: string;
   email: string;
+  password?: string;
   attributes: MockUserProfileAttributes;
 }
 
@@ -40,6 +42,10 @@ class MockDatabase {
 
   findUserByID(id: string): MockUserProfile | null {
     return this.users.find((storedUser) => storedUser.id === id) || null;
+  }
+
+  findUserByEmail(email: string): MockUserProfile | null {
+    return this.users.find((storedUser) => storedUser.email === email) || null;
   }
 
   clear(): void {
@@ -67,6 +73,7 @@ class MockDatabase {
       firstName: finalizedOptions.firstName || "Henk",
       lastName: finalizedOptions.lastName || "Jansen",
       email: finalizedOptions.email || "henk.jansen@gmail.com",
+      password: finalizedOptions.password,
       attributes: {
         ...(finalizedOptions.attributes || {}),
       },
