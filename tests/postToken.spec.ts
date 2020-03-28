@@ -1,7 +1,4 @@
 import axios from "axios";
-import { v4 as uuidv4 } from "uuid";
-
-import * as KeycloakMock from "../lib";
 import { setupBefore, teardownAfter, getMockInstance } from "./util";
 
 describe("postToken", () => {
@@ -79,7 +76,7 @@ describe("postToken", () => {
     expect(response.status).toBe(403);
   });
 
-  it("rejects with 200 with clientId, username, password", async () => {
+  it("responds with 200 with clientId, username, password", async () => {
     const kmock = getMockInstance();
     const url = kmock.createURL(
       "/realms/myrealm/protocol/openid-connect/token"
