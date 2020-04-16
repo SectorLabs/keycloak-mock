@@ -40,15 +40,16 @@ const createToken: PostViewFn = (instance, request, requestBody) => {
     return [403, "Access denied"];
   }
 
-  const accessToken = instance.createBearerToken(user.profile.id);
-  const refreshToken = instance.createBearerToken(user.profile.id);
+  const expiresIn = 3600;
+  const accessToken = instance.createBearerToken(user.profile.id, expiresIn);
+  const refreshToken = instance.createBearerToken(user.profile.id, expiresIn);
 
   return [
     200,
     {
       access_token: accessToken,
-      expires_in: 300,
-      refresh_expires_in: 1800,
+      expires_in: expiresIn,
+      refresh_expires_in: expiresIn,
       refresh_token: refreshToken,
       token_type: "bearer",
       "not-before-policy": 0,

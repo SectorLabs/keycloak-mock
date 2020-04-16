@@ -3,9 +3,9 @@
 exports[`createToken allows a client to login with a secret key 1`] = `
 Object {
   "access_token": null,
-  "expires_in": 300,
+  "expires_in": 3600,
   "not-before-policy": 0,
-  "refresh_expires_in": 1800,
+  "refresh_expires_in": 3600,
   "refresh_token": null,
   "scope": "test",
   "session_state": null,
@@ -16,9 +16,9 @@ Object {
 exports[`createToken allows a regular user to login with a password 1`] = `
 Object {
   "access_token": null,
-  "expires_in": 300,
+  "expires_in": 3600,
   "not-before-policy": 0,
-  "refresh_expires_in": 1800,
+  "refresh_expires_in": 3600,
   "refresh_token": null,
   "scope": "test",
   "session_state": null,
