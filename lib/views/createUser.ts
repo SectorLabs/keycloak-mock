@@ -27,7 +27,16 @@ const createUser: PostViewFn = (instance, request, body) => {
     credentials: body.credentials,
   });
 
-  return [200, { id: createdUser.profile.id }];
+  const resourcePath = `/admin/realms/${instance.params.realm}/users/${createdUser.profile.id}`;
+  const resourceURL = instance.createURL(resourcePath);
+
+  return [
+    200,
+    { id: createdUser.profile.id },
+    {
+      location: resourceURL,
+    },
+  ];
 };
 
 export default createUser;

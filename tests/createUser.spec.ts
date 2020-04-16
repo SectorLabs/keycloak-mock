@@ -44,7 +44,7 @@ describe("createUser", () => {
   it("returns 200 and creates a user", async () => {
     const { kmock, url, token } = createInstanceAndURL();
 
-    const { status, data } = await axios.post(
+    const { status, data, headers } = await axios.post(
       url,
       {
         username: "myuser",
@@ -69,8 +69,13 @@ describe("createUser", () => {
       }
     );
 
+    const resourceURL = kmock.createURL(
+      `/admin/realms/${kmock.params.realm}/users/${data.id}`
+    );
+
     expect(status).toBe(200);
     expect(data.id).toBeTruthy();
+    expect(headers.location).toBe(resourceURL);
 
     expect(kmock.database.findUserByID(data.id)).toBeTruthy();
   });
