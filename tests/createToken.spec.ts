@@ -14,22 +14,6 @@ describe("createToken", () => {
     return { kmock, url };
   };
 
-  it("returns 400 without a grant_type", async () => {
-    const { kmock, url } = createInstanceAndURL();
-
-    const { status } = await axios.post(
-      url,
-      {
-        username: "henk@gmail.com",
-        password: "testPassword!",
-        client_id: "test",
-      },
-      { validateStatus: () => true }
-    );
-
-    expect(status).toBe(400);
-  });
-
   it("returns 400 with an invalid grant_type", async () => {
     const { kmock, url } = createInstanceAndURL();
 
@@ -140,6 +124,23 @@ describe("createToken", () => {
       refresh_token: null,
       session_state: null,
     }).toMatchSnapshot();
+  });
+
+  it("assumes the grant_type is password if not specified", async () => {
+    const { kmock, url } = createInstanceAndURL();
+
+    const { status, data } = await axios.post(
+      url,
+      {
+        username: "henk@gmail.com",
+        password: "testPassword!",
+        client_id: "test",
+        scope: "test",
+      },
+      { validateStatus: () => true }
+    );
+
+    expect(status).toBe(200);
   });
 
   it("allows a client to login with a secret key", async () => {

@@ -18,7 +18,7 @@ const createToken: PostViewFn = (instance, request, requestBody) => {
 
   let user: MockUser | null = null;
 
-  if (grantType === "password") {
+  if (!grantType || grantType === "password") {
     const { username, password } = grantRequest;
     if (!username || !password) {
       return [400, "Bad request"];
