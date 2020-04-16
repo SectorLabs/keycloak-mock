@@ -36,8 +36,17 @@ Tested with Node.js 8.x, 10.x, 12.x, 13.x
     const mock = KeycloakMock.activateMock(keycloak);
 
     // create a user and a token for it
-    const user = keycloak.database.createUser({ name: "test", email: "hello@hello.com" });
-    const token = keycloak.createBearerToken(user.sub);
+    const user = keycloak.database.createUser({
+        name: "test",
+        email: "hello@hello.com", // username will be email
+        credentials: [{
+            value: "mypassword",
+        }],
+    });
+
+    console.log(user.profile, user.credentials);
+
+    const token = keycloak.createBearerToken(user.profile.id);
 
     // get active mock without a reference
     const sameMock = KeycloakMock.getMock("https://myserver.com/auth");
@@ -46,7 +55,7 @@ Tested with Node.js 8.x, 10.x, 12.x, 13.x
     mock.instance.database.clear();
 
     // find user profile
-    const sameUser = mock.instance.database.findUserByID(user.sub);
+    const sameUser = mock.instance.database.findUserByID(user.profile.id);
 
     // de-activate the mock
     KeycloakMock.deactivateMock(sameMock);
@@ -73,4 +82,10 @@ Tested with Node.js 8.x, 10.x, 12.x, 13.x
        getUserInfoView: (instance, request) => {
            return [500, ""];
        },
-    })
+       createTokenView: (instance, request, body) => {
+           return [500, ""];
+       },
+       createUserView: (instance, request, body) => {
+           return [500, ""];
+       },
+    });
