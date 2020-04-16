@@ -134,7 +134,9 @@ class MockDatabase {
    * Deletes all existing users.
    */
   clear(): void {
-    this.users = [];
+    this.users = this.users.filter(
+      (user) => user.profile.email === MockDatabase.SERVICE_USER_EMAIL
+    );
   }
 
   /**
