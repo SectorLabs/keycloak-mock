@@ -74,18 +74,7 @@ const createMockInstance = async (
 
   // create a service account if we have a client secret key
   if (options.clientSecret) {
-    database.createUser({
-      username: options.clientID,
-      email: "service@keycloak-mock.com",
-      enabled: true,
-      emailVerified: true,
-      credentials: [
-        {
-          type: MockUserCredentialType.CLIENT_SECRET,
-          value: options.clientSecret,
-        },
-      ],
-    });
+    database.createServiceUser(options.clientID, options.clientSecret);
   }
 
   return new MockInstance(store, defaultKey, database, {

@@ -20,7 +20,6 @@ export interface CreateMockUserOptions {
   firstName?: string;
   lastName?: string;
   email?: string;
-  password?: string;
   attributes?: MockUserProfileAttributes;
   credentials?: { type?: MockUserCredentialType; value: string }[];
 }
@@ -35,7 +34,6 @@ export interface MockUserProfile {
   firstName: string;
   lastName: string;
   email: string;
-  password?: string;
   attributes: MockUserProfileAttributes;
 }
 
@@ -45,6 +43,8 @@ export interface MockUser {
 }
 
 class MockDatabase {
+  static SERVICE_USER_EMAIL: string = "service@keycloak-mock.com";
+
   users: MockUser[];
 
   constructor() {
@@ -167,6 +167,25 @@ class MockDatabase {
     this.users.push(user);
 
     return user;
+  }
+
+  /**
+   * Creates a service account that can authenticate using
+   * client credentials.
+   */
+  createServiceUser(clientID: string, clientSecret: string): MockUser {
+    return this.createUser({
+      username: clientID,
+      email: MockDatabase.SERVICE_USER_EMAIL,
+      enabled: true,
+      emailVerified: true,
+      credentials: [
+        {
+          type: MockUserCredentialType.CLIENT_SECRET,
+          value: clientSecret,
+        },
+      ],
+    });
   }
 }
 

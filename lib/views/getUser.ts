@@ -2,7 +2,6 @@ import { ViewFn } from "../types";
 
 const getUser: ViewFn = (instance, request) => {
   const { user } = request;
-
   if (!user) {
     return [403, "Access denied"];
   }

@@ -3,7 +3,13 @@ import nock, { Scope } from "nock";
 import { ViewFn, PostViewFn } from "./types";
 import { MockInstance } from "./instance";
 import { decodeTokenAndAttachUser } from "./middlewares";
-import { listCertificates, getUser, getUserInfo, createToken } from "./views";
+import {
+  listCertificates,
+  getUser,
+  getUserInfo,
+  createToken,
+  createUser,
+} from "./views";
 
 let __activeMocks__: Map<string, Mock> = new Map<string, Mock>();
 
@@ -17,6 +23,7 @@ export interface MockOptions {
   getUserView?: ViewFn;
   getUserInfoView?: ViewFn;
   createTokenView?: PostViewFn;
+  createUserView?: PostViewFn;
 }
 
 const activateMock = (instance: MockInstance, options?: MockOptions): Mock => {
@@ -66,6 +73,16 @@ const activateMock = (instance: MockInstance, options?: MockOptions): Mock => {
       }
 
       return createToken(instance, this.req, requestBody);
+    })
+    .post(`/realms/${realm}/users`)
+    .reply(async function(uri, requestBody) {
+      await decodeTokenAndAttachUser(instance, this.req);
+
+      if (options && options.createUserView) {
+        return options.createUserView(instance, this.req, requestBody);
+      }
+
+      return createUser(instance, this.req, requestBody);
     });
 
   const mock = { scope, instance };
