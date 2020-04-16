@@ -15,7 +15,6 @@ export {
 export {
   default as MockDatabase,
   MockUser,
-  MockUserCredential,
   MockUserCredentialType,
   MockUserProfile,
   CreateMockUserOptions,

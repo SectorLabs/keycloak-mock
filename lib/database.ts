@@ -7,11 +7,7 @@ export type MockUserProfileAttributes = {
 
 export enum MockUserCredentialType {
   PASSWORD = "password",
-}
-
-export interface MockUserCredential {
-  type: MockUserCredentialType;
-  value: string;
+  CLIENT_SECRET = "client_secret",
 }
 
 export interface CreateMockUserOptions {
@@ -26,7 +22,7 @@ export interface CreateMockUserOptions {
   email?: string;
   password?: string;
   attributes?: MockUserProfileAttributes;
-  credentials?: MockUserCredential[];
+  credentials?: { type?: MockUserCredentialType; value: string }[];
 }
 
 export interface MockUserProfile {
@@ -45,7 +41,7 @@ export interface MockUserProfile {
 
 export interface MockUser {
   profile: MockUserProfile;
-  credentials: MockUserCredential[];
+  credentials: { type: MockUserCredentialType; value: string }[];
 }
 
 class MockDatabase {
@@ -132,9 +128,14 @@ class MockDatabase {
       },
     };
 
+    const credentials = finalizedOptions.credentials || [];
+
     const user: MockUser = {
       profile,
-      credentials: finalizedOptions.credentials || [],
+      credentials: credentials.map(({ type, value }) => ({
+        type: type || MockUserCredentialType.PASSWORD,
+        value,
+      })),
     };
 
     this.users.push(user);

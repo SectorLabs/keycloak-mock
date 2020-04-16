@@ -1,11 +1,12 @@
 import { JWK } from "node-jose";
 
-import MockDatabase from "./database";
+import MockDatabase, { MockUserCredentialType } from "./database";
 import createBearerToken from "./createBearerToken";
 
 export interface CreateMockInstanceOptions {
   authServerURL: string;
   clientID: string;
+  clientSecret?: string;
   realm: string;
 
   /**
@@ -18,6 +19,7 @@ export interface CreateMockInstanceOptions {
 export interface MockInstanceParams {
   authServerURL: string;
   clientID: string;
+  clientSecret: string | null;
   realm: string;
 }
 
@@ -68,9 +70,28 @@ const createMockInstance = async (
   const keySize = options.keySize || 2048;
   const defaultKey = await store.generate("RSA", keySize, { use: "sig" });
 
-  return new MockInstance(store, defaultKey, new MockDatabase(), {
+  const database = new MockDatabase();
+
+  // create a service account if we have a client secret key
+  if (options.clientSecret) {
+    database.createUser({
+      username: options.clientID,
+      email: "service@keycloak-mock.com",
+      enabled: true,
+      emailVerified: true,
+      credentials: [
+        {
+          type: MockUserCredentialType.CLIENT_SECRET,
+          value: options.clientSecret,
+        },
+      ],
+    });
+  }
+
+  return new MockInstance(store, defaultKey, database, {
     authServerURL: options.authServerURL,
     clientID: options.clientID,
+    clientSecret: options.clientSecret || null,
     realm: options.realm,
   });
 };
