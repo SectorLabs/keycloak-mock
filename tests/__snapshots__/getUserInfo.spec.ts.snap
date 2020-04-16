@@ -2,14 +2,13 @@
 
 exports[`getUserInfo works with token 1`] = `
 Object {
-  "created_at": 1,
-  "email": "henk@gmail.com",
+  "email": "service@keycloak-mock.com",
   "email_verified": true,
   "family_name": "Jansen",
   "gender": null,
   "given_name": "Henk",
   "name": "Henk Jansen",
-  "preferred_username": "henk@gmail.com",
-  "sub": "4255c2ae-3f11-4a26-a401-3981c8845df3",
+  "preferred_username": "test",
+  "sub": 1,
 }
 `;

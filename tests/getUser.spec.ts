@@ -30,8 +30,11 @@ describe("getUser", () => {
       headers: { authorization: `Bearer ${token}` },
     });
 
+    expect(response.data.id).toBe(user.profile.id);
+    expect(response.data.createdTimestamp).toBeTruthy();
+
     // hack out createdTimestamp because it keeps changing
-    const responseData = { ...response.data, createdTimestamp: 1 };
+    const responseData = { ...response.data, id: 1, createdTimestamp: 1 };
     expect(responseData).toMatchSnapshot();
   });
 });

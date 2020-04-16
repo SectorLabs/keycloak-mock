@@ -94,6 +94,32 @@ class MockDatabase {
   }
 
   /**
+   * Attempts to match against a service account user.
+   */
+  matchForClientGrant(
+    clientID: string,
+    clientSecret: string
+  ): MockUser | null {
+    const user = this.findUserByUsername(clientID);
+    if (!user) {
+      return null;
+    }
+
+    const credential = user.credentials.find(
+      ({ type }) => type === MockUserCredentialType.CLIENT_SECRET
+    );
+    if (!credential) {
+      return null;
+    }
+
+    if (credential.value !== clientSecret) {
+      return null;
+    }
+
+    return user;
+  }
+
+  /**
    * Deletes all existing users.
    */
   clear(): void {

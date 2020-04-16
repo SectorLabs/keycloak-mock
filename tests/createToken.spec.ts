@@ -113,7 +113,7 @@ describe("createToken", () => {
     expect(status).toBe(403);
   });
 
-  it("returns 200 and a valid access token + refresh token", async () => {
+  it("allows a regular user to login with a password", async () => {
     const { kmock, url } = createInstanceAndURL();
 
     const { status, data } = await axios.post(
@@ -122,6 +122,34 @@ describe("createToken", () => {
         grant_type: "password",
         username: "henk@gmail.com",
         password: "testPassword!",
+        client_id: "test",
+        scope: "test",
+      },
+      { validateStatus: () => true }
+    );
+
+    expect(status).toBe(200);
+    expect(data.access_token).toBeTruthy();
+    expect(data.refresh_token).toBeTruthy();
+    expect(data.token_type).toBeTruthy();
+    expect(data.session_state).toBeTruthy();
+
+    expect({
+      ...data,
+      access_token: null,
+      refresh_token: null,
+      session_state: null,
+    }).toMatchSnapshot();
+  });
+
+  it("allows a client to login with a secret key", async () => {
+    const { kmock, url } = createInstanceAndURL();
+
+    const { status, data } = await axios.post(
+      url,
+      {
+        grant_type: "client_credentials",
+        client_secret: kmock.params.clientSecret,
         client_id: "test",
         scope: "test",
       },

@@ -30,8 +30,10 @@ describe("getUserInfo", () => {
       headers: { authorization: `Bearer ${token}` },
     });
 
+    expect(response.data.sub).toBe(user.profile.id);
+
     // hack out created_at because it keeps changing
-    const responseData = { ...response.data, created_at: 1 };
+    const responseData = { ...response.data, sub: 1 };
     expect(responseData).toMatchSnapshot();
   });
 });

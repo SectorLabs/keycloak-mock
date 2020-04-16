@@ -25,6 +25,13 @@ const createToken: PostViewFn = (instance, request, requestBody) => {
     }
 
     user = instance.database.matchForPasswordGrant(username, password);
+  } else if (grantType === "client_credentials") {
+    const { client_secret: clientSecret } = grantRequest;
+    if (!clientSecret) {
+      return [400, "Bad request"];
+    }
+
+    user = instance.database.matchForClientGrant(clientID, clientSecret);
   } else {
     return [400, "Bad request"];
   }
