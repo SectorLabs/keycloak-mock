@@ -5,84 +5,19 @@ describe("createToken", () => {
   beforeAll(setupBefore);
   afterAll(teardownAfter);
 
-  it("rejects with 403 without correct clientId", async () => {
+  const createInstanceAndURL = () => {
     const kmock = getMockInstance();
     const url = kmock.createURL(
       "/realms/myrealm/protocol/openid-connect/token"
     );
 
-    const response = await axios.post(
-      url,
-      {
-        username: "test@sectorlabs.com",
-        password: "thisIsATest!",
-        client_id: "doesNotExist",
-      },
-      { validateStatus: () => true }
-    );
-    expect(response.status).toBe(403);
-  });
+    return { kmock, url };
+  };
 
-  it("rejects with 403 without username", async () => {
-    const kmock = getMockInstance();
-    const url = kmock.createURL(
-      "/realms/myrealm/protocol/openid-connect/token"
-    );
+  it("returns 400 without a grant_type", async () => {
+    const { kmock, url } = createInstanceAndURL();
 
-    const response = await axios.post(
-      url,
-      {
-        username: "test@sectorlabs.com",
-        client_id: "test",
-      },
-      { validateStatus: () => true }
-    );
-    expect(response.status).toBe(403);
-  });
-
-  it("rejects with 403 with non existing user", async () => {
-    const kmock = getMockInstance();
-    const url = kmock.createURL(
-      "/realms/myrealm/protocol/openid-connect/token"
-    );
-
-    const response = await axios.post(
-      url,
-      {
-        username: "test@sectorlabs.com",
-        password: "thisIsATest!",
-        client_id: "test",
-      },
-      { validateStatus: () => true }
-    );
-    expect(response.status).toBe(403);
-  });
-
-  it("rejects with 403 with wrong password", async () => {
-    const kmock = getMockInstance();
-    const url = kmock.createURL(
-      "/realms/myrealm/protocol/openid-connect/token"
-    );
-
-    const response = await axios.post(
-      url,
-      {
-        username: "henk@gmail.com",
-        password: "thisIsATest!",
-        client_id: "test",
-      },
-      { validateStatus: () => true }
-    );
-    expect(response.status).toBe(403);
-  });
-
-  it("responds with 200 with clientId, username, password", async () => {
-    const kmock = getMockInstance();
-    const url = kmock.createURL(
-      "/realms/myrealm/protocol/openid-connect/token"
-    );
-
-    const response = await axios.post(
+    const { status } = await axios.post(
       url,
       {
         username: "henk@gmail.com",
@@ -91,14 +26,119 @@ describe("createToken", () => {
       },
       { validateStatus: () => true }
     );
-    expect(response.status).toBe(200);
 
-    expect(response.data).toEqual(
-      expect.objectContaining({
-        access_token: expect.any(String),
-        refresh_token: expect.any(String),
-        token_type: "bearer",
-      })
+    expect(status).toBe(400);
+  });
+
+  it("returns 400 with an invalid grant_type", async () => {
+    const { kmock, url } = createInstanceAndURL();
+
+    const { status } = await axios.post(
+      url,
+      {
+        grant_type: "unknown",
+        username: "henk@gmail.com",
+        password: "testPassword!",
+        client_id: "test",
+      },
+      { validateStatus: () => true }
     );
+
+    expect(status).toBe(400);
+  });
+
+  it("returns 400 with missing username and password", async () => {
+    const { kmock, url } = createInstanceAndURL();
+
+    const { status } = await axios.post(
+      url,
+      {
+        grant_type: "password",
+        client_id: "test",
+      },
+      { validateStatus: () => true }
+    );
+
+    expect(status).toBe(400);
+  });
+
+  it("returns 400 with invalid client_id", async () => {
+    const { kmock, url } = createInstanceAndURL();
+
+    const { status } = await axios.post(
+      url,
+      {
+        grant_type: "password",
+        username: "henk@gmail.com",
+        password: "testPassword!",
+        client_id: "hbfsdfdf",
+      },
+      { validateStatus: () => true }
+    );
+
+    expect(status).toBe(400);
+  });
+
+  it("returns 403 with non existing user", async () => {
+    const { kmock, url } = createInstanceAndURL();
+
+    const { status } = await axios.post(
+      url,
+      {
+        grant_type: "password",
+        username: "bla@test.com",
+        password: "testPassword!",
+        client_id: "test",
+      },
+      { validateStatus: () => true }
+    );
+
+    expect(status).toBe(403);
+  });
+
+  it("returns 403 with wrong password", async () => {
+    const { kmock, url } = createInstanceAndURL();
+
+    const { status } = await axios.post(
+      url,
+      {
+        grant_type: "password",
+        username: "henk@gmail.com",
+        password: "wrongPassword",
+        client_id: "test",
+      },
+      { validateStatus: () => true }
+    );
+
+    expect(status).toBe(403);
+  });
+
+  it("returns 200 and a valid access token + refresh token", async () => {
+    const { kmock, url } = createInstanceAndURL();
+
+    const { status, data } = await axios.post(
+      url,
+      {
+        grant_type: "password",
+        username: "henk@gmail.com",
+        password: "testPassword!",
+        client_id: "test",
+        scope: "test",
+      },
+      { validateStatus: () => true }
+    );
+
+    expect(status).toBe(200);
+    expect(data.access_token).toBeTruthy();
+    expect(data.refresh_token).toBeTruthy();
+    expect(data.token_type).toBeTruthy();
+    expect(data.session_state).toBeTruthy();
+
+    expect({
+      ...data,
+      access_token: null,
+      refresh_token: null,
+      session_state: null,
+    }).toMatchSnapshot();
   });
 });

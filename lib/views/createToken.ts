@@ -1,38 +1,52 @@
+import { v4 as uuidv4 } from "uuid";
+
 import { PostViewFn } from "../types";
 import createBearerToken from "../createBearerToken";
+import { MockUser, MockUserCredentialType } from "../database";
 
 const createToken: PostViewFn = (instance, request, requestBody) => {
   if (typeof requestBody !== "object") {
     return [400, "Bad request"];
   }
 
-  const { username, password, client_id } = (requestBody as unknown) as Record<
-    string,
-    any
-  >;
-  if (!username || !password || instance.params.clientID !== client_id) {
+  const grantRequest = (requestBody as unknown) as Record<string, any>;
+  const { grant_type: grantType, client_id: clientID, scope } = grantRequest;
+
+  if (instance.params.clientID !== clientID) {
+    return [400, "Bad request"];
+  }
+
+  let user: MockUser | null = null;
+
+  if (grantType === "password") {
+    const { username, password } = grantRequest;
+    if (!username || !password) {
+      return [400, "Bad request"];
+    }
+
+    user = instance.database.matchForPasswordGrant(username, password);
+  } else {
+    return [400, "Bad request"];
+  }
+
+  if (!user) {
     return [403, "Access denied"];
   }
 
-  const user = instance.database.findUserByEmail(username);
-  if (!user || password !== user.password) {
-    return [403, "Access denied"];
-  }
-
-  const access_token = instance.createBearerToken(user.id);
-  const refresh_token = instance.createBearerToken(user.id);
+  const accessToken = instance.createBearerToken(user.profile.id);
+  const refreshToken = instance.createBearerToken(user.profile.id);
 
   return [
     200,
     {
-      access_token: access_token,
+      access_token: accessToken,
       expires_in: 300,
       refresh_expires_in: 1800,
-      refresh_token: refresh_token,
+      refresh_token: refreshToken,
       token_type: "bearer",
       "not-before-policy": 0,
-      session_state: "39b4a1a3-3900-412f-82d3-bf538da5658e",
-      scope: "email profile",
+      session_state: uuidv4(),
+      scope: scope || "email profile",
     },
   ];
 };

@@ -10,8 +10,7 @@ const getUser: ViewFn = (instance, request) => {
   return [
     200,
     {
-      ...user,
-      password: undefined,
+      ...user.profile,
       // TODO: make these configurable
       disableableCredentialTypes: ["password"],
       requiredActions: [],

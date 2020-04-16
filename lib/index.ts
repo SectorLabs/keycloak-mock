@@ -14,8 +14,11 @@ export {
 } from "./instance";
 export {
   default as MockDatabase,
+  MockUser,
+  MockUserCredential,
+  MockUserCredentialType,
   MockUserProfile,
-  CreateMockUserProfileOptions,
+  CreateMockUserOptions,
 } from "./database";
 export {
   default as createBearerToken,

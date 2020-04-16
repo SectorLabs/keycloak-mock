@@ -26,7 +26,7 @@ describe("listCertificates", () => {
     const kmock = getMockInstance();
 
     const user = kmock.database.users[0];
-    const token = kmock.createBearerToken(user.id);
+    const token = kmock.createBearerToken(user.profile.id);
 
     const url = kmock.createURL(
       "/realms/myrealm/protocol/openid-connect/certs"

@@ -24,6 +24,6 @@ Object {
   "notBefore": 0,
   "requiredActions": Array [],
   "totp": true,
-  "username": "henk.jansen@gmail.com",
+  "username": "henk@gmail.com",
 }
 `;

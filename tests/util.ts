@@ -14,7 +14,12 @@ const setupBefore = async () => {
     firstName: "Henk",
     lastName: "Jansen",
     email: "henk@gmail.com",
-    password: "testPassword!",
+    credentials: [
+      {
+        type: KeycloakMock.MockUserCredentialType.PASSWORD,
+        value: "testPassword!",
+      },
+    ],
   });
 };
 

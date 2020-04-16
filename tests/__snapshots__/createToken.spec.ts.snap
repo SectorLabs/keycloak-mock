@@ -1,0 +1,14 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`createToken returns 200 and a valid access token + refresh token 1`] = `
+Object {
+  "access_token": null,
+  "expires_in": 300,
+  "not-before-policy": 0,
+  "refresh_expires_in": 1800,
+  "refresh_token": null,
+  "scope": "test",
+  "session_state": null,
+  "token_type": "bearer",
+}
+`;

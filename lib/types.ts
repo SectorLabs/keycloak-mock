@@ -2,10 +2,10 @@ import { ClientRequest } from "http";
 import { ReplyFnResult as NockClientResponse } from "nock";
 
 import { MockInstance } from "./instance";
-import { MockUserProfile } from "./database";
+import { MockUser } from "./database";
 
 type NockClientRequest = ClientRequest & {
-  user?: MockUserProfile | null;
+  user?: MockUser | null;
   headers: Record<string, string>;
 };
 

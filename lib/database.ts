@@ -5,7 +5,16 @@ export type MockUserProfileAttributes = {
   [key: string]: [string];
 };
 
-export interface CreateMockUserProfileOptions {
+export enum MockUserCredentialType {
+  PASSWORD = "password",
+}
+
+export interface MockUserCredential {
+  type: MockUserCredentialType;
+  value: string;
+}
+
+export interface CreateMockUserOptions {
   id?: string;
   createdTimestamp?: number;
   username?: string;
@@ -17,6 +26,7 @@ export interface CreateMockUserProfileOptions {
   email?: string;
   password?: string;
   attributes?: MockUserProfileAttributes;
+  credentials?: MockUserCredential[];
 }
 
 export interface MockUserProfile {
@@ -33,21 +43,63 @@ export interface MockUserProfile {
   attributes: MockUserProfileAttributes;
 }
 
+export interface MockUser {
+  profile: MockUserProfile;
+  credentials: MockUserCredential[];
+}
+
 class MockDatabase {
-  users: MockUserProfile[];
+  users: MockUser[];
 
   constructor() {
     this.users = [];
   }
 
-  findUserByID(id: string): MockUserProfile | null {
-    return this.users.find((storedUser) => storedUser.id === id) || null;
+  /**
+   * Finds an existing user by ID.
+   */
+  findUserByID(id: string): MockUser | null {
+    const user = this.users.find((storedUser) => storedUser.profile.id === id);
+    return user || null;
   }
 
-  findUserByEmail(email: string): MockUserProfile | null {
-    return this.users.find((storedUser) => storedUser.email === email) || null;
+  /**
+   * Finds an existing user by username.
+   */
+  findUserByUsername(username: string): MockUser | null {
+    const user = this.users.find(
+      (storedUser) => storedUser.profile.username === username
+    );
+    return user || null;
   }
 
+  /**
+   * Attempts to match against a user with the specified
+   * username and password.
+   */
+  matchForPasswordGrant(username: string, password: string): MockUser | null {
+    const user = this.findUserByUsername(username);
+    if (!user) {
+      return null;
+    }
+
+    const credential = user.credentials.find(
+      ({ type }) => type === MockUserCredentialType.PASSWORD
+    );
+    if (!credential) {
+      return null;
+    }
+
+    if (credential.value !== password) {
+      return null;
+    }
+
+    return user;
+  }
+
+  /**
+   * Deletes all existing users.
+   */
   clear(): void {
     this.users = [];
   }
@@ -55,14 +107,16 @@ class MockDatabase {
   /**
    * Creates a new user and returns the profile of the newly created user.
    */
-  createUser(options?: CreateMockUserProfileOptions): MockUserProfile {
+  createUser(options?: CreateMockUserOptions): MockUser {
     const finalizedOptions = options || {};
+
+    const email = finalizedOptions.email || "henk.jansen@gmail.com";
 
     const profile: MockUserProfile = {
       id: finalizedOptions.id || uuidv4(),
       createdTimestamp:
         finalizedOptions.createdTimestamp || new Date().getTime(),
-      username: finalizedOptions.username || "henk.jansen@gmail.com",
+      username: finalizedOptions.username || email,
       enabled: isNil(finalizedOptions.enabled)
         ? true
         : finalizedOptions.enabled,
@@ -72,16 +126,20 @@ class MockDatabase {
         : finalizedOptions.emailVerified,
       firstName: finalizedOptions.firstName || "Henk",
       lastName: finalizedOptions.lastName || "Jansen",
-      email: finalizedOptions.email || "henk.jansen@gmail.com",
-      password: finalizedOptions.password,
+      email,
       attributes: {
         ...(finalizedOptions.attributes || {}),
       },
     };
 
-    this.users.push(profile);
+    const user: MockUser = {
+      profile,
+      credentials: finalizedOptions.credentials || [],
+    };
 
-    return profile;
+    this.users.push(user);
+
+    return user;
   }
 }
 

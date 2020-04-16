@@ -8,17 +8,19 @@ const getUserInfo: ViewFn = (instance, request) => {
     return [403, "Access denied"];
   }
 
+  const { profile } = user;
+
   return [
     200,
     {
-      sub: user.id,
-      email_verified: user.emailVerified,
-      gender: (user.attributes.gender || [])[0] || null,
-      name: `${user.firstName} ${user.lastName}`,
-      preferred_username: user.username,
-      given_name: user.firstName,
-      family_name: user.lastName,
-      email: user.email,
+      sub: profile.id,
+      email_verified: profile.emailVerified,
+      gender: (profile.attributes.gender || [])[0] || null,
+      name: `${profile.firstName} ${profile.lastName}`,
+      preferred_username: profile.username,
+      given_name: profile.firstName,
+      family_name: profile.lastName,
+      email: profile.email,
     },
   ];
 };
