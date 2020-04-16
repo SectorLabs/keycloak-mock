@@ -1,9 +1,9 @@
 import nock, { Scope } from "nock";
 
-import { ViewFn, PostFn } from "./types";
+import { ViewFn, PostViewFn } from "./types";
 import { MockInstance } from "./instance";
 import { decodeTokenAndAttachUser } from "./middlewares";
-import { listCertificates, getUser, getUserInfo, postToken } from "./views";
+import { listCertificates, getUser, getUserInfo, createToken } from "./views";
 
 let __activeMocks__: Map<string, Mock> = new Map<string, Mock>();
 
@@ -16,7 +16,7 @@ export interface MockOptions {
   listCertificatesView?: ViewFn;
   getUserView?: ViewFn;
   getUserInfoView?: ViewFn;
-  postToken?: PostFn;
+  createTokenView?: PostViewFn;
 }
 
 const activateMock = (instance: MockInstance, options?: MockOptions): Mock => {
@@ -61,7 +61,11 @@ const activateMock = (instance: MockInstance, options?: MockOptions): Mock => {
     })
     .post(`/realms/${realm}/protocol/openid-connect/token`)
     .reply(async function(uri, requestBody) {
-      return postToken(instance, this.req, requestBody);
+      if (options && options.createTokenView) {
+        return options.createTokenView(instance, this.req, requestBody);
+      }
+
+      return createToken(instance, this.req, requestBody);
     });
 
   const mock = { scope, instance };

@@ -1,7 +1,7 @@
 import axios from "axios";
 import { setupBefore, teardownAfter, getMockInstance } from "./util";
 
-describe("postToken", () => {
+describe("createToken", () => {
   beforeAll(setupBefore);
   afterAll(teardownAfter);
 

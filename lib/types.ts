@@ -14,13 +14,13 @@ export type ViewFn = (
   request: NockClientRequest
 ) => NockClientResponse;
 
-export type MiddlewareFn = (
-  instance: MockInstance,
-  request: NockClientRequest
-) => Promise<void>;
-
-export type PostFn = (
+export type PostViewFn = (
   instance: MockInstance,
   request: NockClientRequest,
   body: string | Record<string, any>
 ) => NockClientResponse;
+
+export type MiddlewareFn = (
+  instance: MockInstance,
+  request: NockClientRequest
+) => Promise<void>;

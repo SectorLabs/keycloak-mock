@@ -1,9 +1,9 @@
-import { PostFn } from "../types";
-import createBearerToken, {CreateTokenOptions} from "../createBearerToken"
+import { PostViewFn } from "../types";
+import createBearerToken from "../createBearerToken";
 
-const postToken: PostFn = (instance, request, requestBody) => {
+const createToken: PostViewFn = (instance, request, requestBody) => {
   if (typeof requestBody !== "object") {
-    return [403, "Access denied"];
+    return [400, "Bad request"];
   }
 
   const { username, password, client_id } = (requestBody as unknown) as Record<
@@ -14,13 +14,13 @@ const postToken: PostFn = (instance, request, requestBody) => {
     return [403, "Access denied"];
   }
 
-  let user = instance.database.findUserByEmail(username);
+  const user = instance.database.findUserByEmail(username);
   if (!user || password !== user.password) {
     return [403, "Access denied"];
   }
 
-  let access_token = instance.createBearerToken(user.id);
-  let refresh_token = instance.createBearerToken(user.id);
+  const access_token = instance.createBearerToken(user.id);
+  const refresh_token = instance.createBearerToken(user.id);
 
   return [
     200,
@@ -37,4 +37,4 @@ const postToken: PostFn = (instance, request, requestBody) => {
   ];
 };
 
-export default postToken;
+export default createToken;

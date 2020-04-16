@@ -1,5 +1,4 @@
 import { ViewFn } from "../types";
-import { MockInstance } from "../instance";
 
 const getUser: ViewFn = (instance, request) => {
   const { user } = request;
@@ -12,6 +11,7 @@ const getUser: ViewFn = (instance, request) => {
     200,
     {
       ...user,
+      password: undefined,
       // TODO: make these configurable
       disableableCredentialTypes: ["password"],
       requiredActions: [],
