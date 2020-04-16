@@ -7,7 +7,7 @@ import { MockUser, MockUserCredentialType } from "../database";
 const createToken: PostViewFn = (instance, request, body) => {
   const { grant_type: grantType, client_id: clientID, scope } = body;
 
-  if (instance.params.clientID !== clientID) {
+  if (clientID && instance.params.clientID !== clientID) {
     return [400, "Bad request"];
   }
 
@@ -21,12 +21,22 @@ const createToken: PostViewFn = (instance, request, body) => {
 
     user = instance.database.matchForPasswordGrant(username, password);
   } else if (grantType === "client_credentials") {
-    const { client_secret: clientSecret } = body;
-    if (!clientSecret) {
+    const { username, password, client_secret: clientSecret } = body;
+
+    if (!clientID && !username) {
       return [400, "Bad request"];
     }
 
-    user = instance.database.matchForClientGrant(clientID, clientSecret);
+    if (!clientSecret && !password) {
+      return [400, "Bad request"];
+    }
+
+    // some clients specify the client ID and client secret as
+    // username and password, hence the fallback
+    user = instance.database.matchForClientGrant(
+      clientID || username,
+      clientSecret || password
+    );
   } else {
     return [400, "Bad request"];
   }

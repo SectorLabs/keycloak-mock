@@ -194,4 +194,24 @@ describe("createToken", () => {
       session_state: null,
     }).toMatchSnapshot();
   });
+
+  it("allows a client to login with a secret key as a password", async () => {
+    const { kmock, url } = createInstanceAndURL();
+
+    // some clients specify the client ID and client secret as
+    // username and password, we should support this
+
+    const { status, data } = await axios.post(
+      url,
+      {
+        grant_type: "client_credentials",
+        username: "test", // client ID
+        password: kmock.params.clientSecret,
+        scope: "test",
+      },
+      { validateStatus: () => true }
+    );
+
+    expect(status).toBe(200);
+  });
 });
