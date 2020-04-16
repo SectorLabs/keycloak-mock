@@ -74,7 +74,7 @@ const activateMock = (instance: MockInstance, options?: MockOptions): Mock => {
 
       return createToken(instance, this.req, requestBody);
     })
-    .post(`/realms/${realm}/users`)
+    .post(`/admin/realms/${realm}/users`)
     .reply(async function(uri, requestBody) {
       await decodeTokenAndAttachUser(instance, this.req);
 

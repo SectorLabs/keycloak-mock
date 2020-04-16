@@ -7,7 +7,7 @@ describe("createUser", () => {
 
   const createInstanceAndURL = () => {
     const kmock = getMockInstance();
-    const url = kmock.createURL("/realms/myrealm/users");
+    const url = kmock.createURL("/admin/realms/myrealm/users");
 
     const serviceUser = kmock.database.findUserByUsername(
       kmock.params.clientID

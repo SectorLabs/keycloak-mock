@@ -6,15 +6,19 @@
 
 A minimal mock for a Keycloak server to be used in unit tests.
 
+This mock is not complete and it definitely doesn't match Keycloak completely. Improvements are welcome.
+
 ## About
 This does not launch an actual HTTP server. It uses [`nock`](https://github.com/nock/nock) to patch Node.js HTTP client to intercept requests.
 
 Tested with Node.js 8.x, 10.x, 12.x, 13.x
 
 ### What works
-* `/[realm]/protocol/openid-connect/certs`
-* `/[realm]/protocol/openid-connect/userinfo`
-* `/admin/realms/[realm]/users/[userid]`
+* `GET /[realm]/protocol/openid-connect/certs`
+* `GET /[realm]/protocol/openid-connect/userinfo`
+* `POST /[realm]/protocol/openid-connect/token`
+* `GET /admin/realms/[realm]/users/[userid]`
+* `POST /admin/realms/[realm]/users`
 
 ## Usage
 ### Basic
