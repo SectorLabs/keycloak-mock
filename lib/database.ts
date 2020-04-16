@@ -52,6 +52,17 @@ class MockDatabase {
   }
 
   /**
+   * Finds the service account user if any exists.
+   */
+  findServiceUser(): MockUser | null {
+    const user = this.users.find(
+      (storedUser) =>
+        storedUser.profile.email === MockDatabase.SERVICE_USER_EMAIL
+    );
+    return user || null;
+  }
+
+  /**
    * Finds an existing user by ID.
    */
   findUserByID(id: string): MockUser | null {
@@ -174,6 +185,10 @@ class MockDatabase {
    * client credentials.
    */
   createServiceUser(clientID: string, clientSecret: string): MockUser {
+    if (this.findServiceUser()) {
+      throw new Error("There can only be one service account.");
+    }
+
     return this.createUser({
       username: clientID,
       email: MockDatabase.SERVICE_USER_EMAIL,

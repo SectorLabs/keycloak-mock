@@ -9,9 +9,7 @@ describe("createUser", () => {
     const kmock = getMockInstance();
     const url = kmock.createURL("/admin/realms/myrealm/users");
 
-    const serviceUser = kmock.database.findUserByUsername(
-      kmock.params.clientID
-    );
+    const serviceUser = kmock.database.findServiceUser();
     if (!serviceUser) {
       throw new Error("Cannot find service user");
     }

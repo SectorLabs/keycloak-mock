@@ -28,6 +28,7 @@ Tested with Node.js 8.x, 10.x, 12.x, 13.x
         authServerURL: "https://myserver.com/auth",
         realm: "myrealm",
         clientID: "client-1",
+        clientSecret: "test",
     });
 
     // all requests to `https://myserver.com/auth` will now be
