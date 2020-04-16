@@ -10,7 +10,9 @@ describe("getUser", () => {
 
   it("rejects with 403 without token", async () => {
     const kmock = getMockInstance();
-    const url = kmock.createURL(`/admin/realms/myrealm/users/${uuidv4()}`);
+    const url = kmock.createURL(
+      `/admin/realms/${kmock.params.realm}/users/${uuidv4()}`
+    );
 
     const response = await axios.get(url, { validateStatus: () => true });
     expect(response.status).toBe(403);
@@ -23,7 +25,7 @@ describe("getUser", () => {
     const token = kmock.createBearerToken(user.profile.id);
 
     const url = kmock.createURL(
-      `/admin/realms/myrealm/users/${user.profile.id}`
+      `/admin/realms/${kmock.params.realm}/users/${user.profile.id}`
     );
 
     const response = await axios.get(url, {

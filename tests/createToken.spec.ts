@@ -8,7 +8,7 @@ describe("createToken", () => {
   const createInstanceAndURL = () => {
     const kmock = getMockInstance();
     const url = kmock.createURL(
-      "/realms/myrealm/protocol/openid-connect/token"
+      `/realms/${kmock.params.realm}/protocol/openid-connect/token`
     );
 
     return { kmock, url };

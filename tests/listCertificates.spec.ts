@@ -10,7 +10,7 @@ describe("listCertificates", () => {
   it("works without token", async () => {
     const kmock = getMockInstance();
     const url = kmock.createURL(
-      "/realms/myrealm/protocol/openid-connect/certs"
+      `/realms/${kmock.params.realm}/protocol/openid-connect/certs`
     );
 
     const response = await axios.get(url);
@@ -29,7 +29,7 @@ describe("listCertificates", () => {
     const token = kmock.createBearerToken(user.profile.id);
 
     const url = kmock.createURL(
-      "/realms/myrealm/protocol/openid-connect/certs"
+      `/realms/${kmock.params.realm}/protocol/openid-connect/certs`
     );
 
     const response = await axios.get(url, {
