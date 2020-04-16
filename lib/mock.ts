@@ -1,6 +1,7 @@
+import qs from "qs";
 import nock, { Scope } from "nock";
 
-import { ViewFn, PostViewFn } from "./types";
+import { NockClientRequest, ViewFn, PostViewFn } from "./types";
 import { MockInstance } from "./instance";
 import { decodeTokenAndAttachUser } from "./middlewares";
 import {
@@ -25,6 +26,19 @@ export interface MockOptions {
   createTokenView?: PostViewFn;
   createUserView?: PostViewFn;
 }
+
+const decodeBody = (request: NockClientRequest, requestBody: unknown): {} => {
+  const contentType = (request.headers["content-type"] || "").split(";")[0];
+
+  switch (contentType) {
+    case "application/x-www-form-urlencoded":
+      return qs.parse(requestBody as string);
+
+    // JSON is handled by nock already
+    default:
+      return requestBody as {};
+  }
+};
 
 const activateMock = (instance: MockInstance, options?: MockOptions): Mock => {
   const { authServerURL, realm, clientID } = instance.params;
@@ -67,22 +81,26 @@ const activateMock = (instance: MockInstance, options?: MockOptions): Mock => {
       return getUserInfo(instance, this.req);
     })
     .post(`/realms/${realm}/protocol/openid-connect/token`)
-    .reply(async function(uri, requestBody) {
+    .reply(async function(uri, body) {
+      const decodedBody = decodeBody(this.req, body);
+
       if (options && options.createTokenView) {
-        return options.createTokenView(instance, this.req, requestBody);
+        return options.createTokenView(instance, this.req, decodedBody);
       }
 
-      return createToken(instance, this.req, requestBody);
+      return createToken(instance, this.req, decodedBody);
     })
     .post(`/admin/realms/${realm}/users`)
-    .reply(async function(uri, requestBody) {
+    .reply(async function(uri, body) {
+      const decodedBody = decodeBody(this.req, body);
+
       await decodeTokenAndAttachUser(instance, this.req);
 
       if (options && options.createUserView) {
-        return options.createUserView(instance, this.req, requestBody);
+        return options.createUserView(instance, this.req, decodedBody);
       }
 
-      return createUser(instance, this.req, requestBody);
+      return createUser(instance, this.req, decodedBody);
     });
 
   const mock = { scope, instance };

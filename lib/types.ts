@@ -4,7 +4,7 @@ import { ReplyFnResult as NockClientResponse } from "nock";
 import { MockInstance } from "./instance";
 import { MockUser } from "./database";
 
-type NockClientRequest = ClientRequest & {
+export type NockClientRequest = ClientRequest & {
   user?: MockUser | null;
   headers: Record<string, string>;
 };
@@ -17,7 +17,7 @@ export type ViewFn = (
 export type PostViewFn = (
   instance: MockInstance,
   request: NockClientRequest,
-  body: string | Record<string, any>
+  body: Record<string, any>
 ) => NockClientResponse;
 
 export type MiddlewareFn = (

@@ -4,13 +4,8 @@ import { PostViewFn } from "../types";
 import createBearerToken from "../createBearerToken";
 import { MockUser, MockUserCredentialType } from "../database";
 
-const createToken: PostViewFn = (instance, request, requestBody) => {
-  if (typeof requestBody !== "object") {
-    return [400, "Bad request"];
-  }
-
-  const grantRequest = (requestBody as unknown) as Record<string, any>;
-  const { grant_type: grantType, client_id: clientID, scope } = grantRequest;
+const createToken: PostViewFn = (instance, request, body) => {
+  const { grant_type: grantType, client_id: clientID, scope } = body;
 
   if (instance.params.clientID !== clientID) {
     return [400, "Bad request"];
@@ -19,14 +14,14 @@ const createToken: PostViewFn = (instance, request, requestBody) => {
   let user: MockUser | null = null;
 
   if (!grantType || grantType === "password") {
-    const { username, password } = grantRequest;
+    const { username, password } = body;
     if (!username || !password) {
       return [400, "Bad request"];
     }
 
     user = instance.database.matchForPasswordGrant(username, password);
   } else if (grantType === "client_credentials") {
-    const { client_secret: clientSecret } = grantRequest;
+    const { client_secret: clientSecret } = body;
     if (!clientSecret) {
       return [400, "Bad request"];
     }

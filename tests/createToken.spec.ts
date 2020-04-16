@@ -1,3 +1,4 @@
+import qs from "qs";
 import axios from "axios";
 import { setupBefore, teardownAfter, getMockInstance } from "./util";
 
@@ -138,6 +139,29 @@ describe("createToken", () => {
         scope: "test",
       },
       { validateStatus: () => true }
+    );
+
+    expect(status).toBe(200);
+  });
+
+  it("allows body to be encoded as application/x-www-form-urlencoded", async () => {
+    const { kmock, url } = createInstanceAndURL();
+
+    const { status, data } = await axios.post(
+      url,
+      qs.stringify({
+        grant_type: "password",
+        username: "henk@gmail.com",
+        password: "testPassword!",
+        client_id: "test",
+        scope: "test",
+      }),
+      {
+        headers: {
+          "Content-Type": "application/x-www-form-urlencoded",
+        },
+        validateStatus: () => true,
+      }
     );
 
     expect(status).toBe(200);
