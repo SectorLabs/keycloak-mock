@@ -6,7 +6,7 @@ import createBearerToken from "./createBearerToken";
 export interface CreateMockInstanceOptions {
   authServerURL: string;
   clientID: string;
-  clientSecret?: string;
+  clientSecret?: string | null;
   realm: string;
 
   /**
