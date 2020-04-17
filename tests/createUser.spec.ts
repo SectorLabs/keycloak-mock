@@ -41,8 +41,10 @@ describe("createUser", () => {
     expect(status).toBe(400);
   });
 
-  it("returns 200 and creates a user", async () => {
+  it("returns 409 when creating a user with the same username", async () => {
     const { kmock, url, token } = createInstanceAndURL();
+
+    kmock.database.createUser({ username: "myuser" });
 
     const { status, data, headers } = await axios.post(
       url,
@@ -50,7 +52,65 @@ describe("createUser", () => {
         username: "myuser",
         email: "myuser@test.com",
         enabled: true,
-        totp: 123,
+        emailVerified: true,
+        firstName: "my",
+        lastName: "user",
+        credentials: [
+          {
+            value: "test",
+          },
+        ],
+      },
+      {
+        headers: { authorization: `Bearer ${token}` },
+        validateStatus: () => true,
+      }
+    );
+
+    expect(status).toBe(409);
+    expect(data).toMatchSnapshot();
+  });
+
+  it("returns 409 when creating a user with the same email", async () => {
+    const { kmock, url, token } = createInstanceAndURL();
+
+    kmock.database.createUser({ username: "myuser1", email: "user@user.com" });
+
+    const { status, data, headers } = await axios.post(
+      url,
+      {
+        username: "myuser2",
+        email: "user@user.com",
+        enabled: true,
+        emailVerified: true,
+        firstName: "my",
+        lastName: "user",
+        credentials: [
+          {
+            value: "test",
+          },
+        ],
+      },
+      {
+        headers: { authorization: `Bearer ${token}` },
+        validateStatus: () => true,
+      }
+    );
+
+    expect(status).toBe(409);
+    expect(data).toMatchSnapshot();
+  });
+
+  it("returns 200 and creates a user", async () => {
+    const { kmock, url, token } = createInstanceAndURL();
+
+    const { status, data, headers } = await axios.post(
+      url,
+      {
+        username: "otheruser",
+        email: "myuser@test.com",
+        enabled: true,
+        totp: false,
         emailVerified: true,
         firstName: "my",
         lastName: "user",

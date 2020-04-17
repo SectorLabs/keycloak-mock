@@ -1,0 +1,13 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`createUser returns 409 when creating a user with the same email 1`] = `
+Object {
+  "errorMessage": "A user with email user@user.com already exists",
+}
+`;
+
+exports[`createUser returns 409 when creating a user with the same username 1`] = `
+Object {
+  "errorMessage": "A user with username myuser already exists",
+}
+`;

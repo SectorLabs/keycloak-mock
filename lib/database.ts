@@ -1,6 +1,8 @@
 import { v4 as uuidv4 } from "uuid";
 import isNil from "lodash/isNil";
 
+import { DuplicateUserError } from "./error";
+
 export type MockUserProfileAttributes = {
   [key: string]: [string];
 };
@@ -81,6 +83,16 @@ class MockDatabase {
   }
 
   /**
+   * Finds an existing user by username.
+   */
+  findUserByEmail(email: string): MockUser | null {
+    const user = this.users.find(
+      (storedUser) => storedUser.profile.email === email
+    );
+    return user || null;
+  }
+
+  /**
    * Attempts to match against a user with the specified
    * username and password.
    */
@@ -145,13 +157,31 @@ class MockDatabase {
   createUser(options?: CreateMockUserOptions): MockUser {
     const finalizedOptions = options || {};
 
+    const id = finalizedOptions.id || uuidv4();
     const email = finalizedOptions.email || "henk.jansen@gmail.com";
+    const username = finalizedOptions.username || email;
+
+    if (this.findUserByID(id)) {
+      throw new DuplicateUserError(`A user with id ${id} already exists`);
+    }
+
+    if (this.findUserByUsername(username)) {
+      throw new DuplicateUserError(
+        `A user with username ${username} already exists`
+      );
+    }
+
+    if (this.findUserByEmail(email)) {
+      throw new DuplicateUserError(
+        `A user with email ${email} already exists`
+      );
+    }
 
     const profile: MockUserProfile = {
-      id: finalizedOptions.id || uuidv4(),
+      id,
       createdTimestamp:
         finalizedOptions.createdTimestamp || new Date().getTime(),
-      username: finalizedOptions.username || email,
+      username,
       enabled: isNil(finalizedOptions.enabled)
         ? true
         : finalizedOptions.enabled,
