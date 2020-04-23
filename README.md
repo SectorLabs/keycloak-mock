@@ -16,6 +16,8 @@ Tested with Node.js 8.x, 10.x, 12.x, 13.x
 ### What works
 * `GET /[realm]/protocol/openid-connect/certs`
 * `GET /[realm]/protocol/openid-connect/userinfo`
+* `GET /admin/realms/[realm]/users`
+* `GET /admin/realms/[realm]/users?username=myusername`
 * `POST /[realm]/protocol/openid-connect/token`
 * `GET /admin/realms/[realm]/users/[userid]`
 * `POST /admin/realms/[realm]/users`

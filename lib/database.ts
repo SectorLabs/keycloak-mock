@@ -64,6 +64,13 @@ class MockDatabase {
   }
 
   /**
+   * Gets all users (except service users).
+   */
+  filterUsers(filterFunc: (user: MockUser) => boolean): MockUser[] {
+    return this.allUsers().filter(filterFunc);
+  }
+
+  /**
    * Finds the service account user if any exists.
    */
   findServiceUser(): MockUser | null {

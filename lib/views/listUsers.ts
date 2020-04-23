@@ -1,3 +1,6 @@
+import url from "url";
+import qs from "qs";
+
 import { ViewFn } from "../types";
 
 const listUsers: ViewFn = (instance, request) => {
@@ -6,11 +9,18 @@ const listUsers: ViewFn = (instance, request) => {
     return [403, "Access denied"];
   }
 
-  const users = instance.database.allUsers();
+  const filterParams = qs.parse(url.parse(request.path).query || "");
+  const matchingUsers = instance.database.filterUsers((user) => {
+    if (filterParams.username) {
+      return user.profile.username === filterParams.username;
+    }
+
+    return true;
+  });
 
   return [
     200,
-    users.map((user) => ({
+    matchingUsers.map((user) => ({
       ...user.profile,
       // TODO: make these configurable
       disableableCredentialTypes: ["password"],

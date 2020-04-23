@@ -83,6 +83,7 @@ const activateMock = (instance: MockInstance, options?: MockOptions): Mock => {
       return getUserInfo(instance, this.req);
     })
     .get(`/admin/realms/${realm}/users`)
+    .query(() => true)
     .reply(async function() {
       await decodeTokenAndAttachUser(instance, this.req);
 

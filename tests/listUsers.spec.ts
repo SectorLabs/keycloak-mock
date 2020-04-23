@@ -36,4 +36,24 @@ describe("listUsers", () => {
     }));
     expect(responseData).toMatchSnapshot();
   });
+
+  it("filters by username", async () => {
+    const kmock = getMockInstance();
+
+    const token = kmock.createBearerToken(kmock.database.users[0].profile.id);
+    const mockUser = kmock.database.createUser({ username: "whoop" });
+
+    const url = kmock.createURL(
+      `/admin/realms/${kmock.params.realm}/users?username=whoop`
+    );
+
+    const response = await axios.get(url, {
+      headers: { authorization: `Bearer ${token}` },
+    });
+
+    expect(response.data).toHaveLength(1);
+    expect(response.data[0].id).toBe(mockUser.profile.id);
+
+    expect(kmock.database.allUsers()).toHaveLength(2);
+  });
 });
