@@ -20,6 +20,7 @@ Tested with Node.js 8.x, 10.x, 12.x, 13.x
 * `GET /admin/realms/[realm]/users?username=myusername`
 * `POST /[realm]/protocol/openid-connect/token`
 * `GET /admin/realms/[realm]/users/[userid]`
+* `DELETE /admin/realms/[realm]/users/[userid]`
 * `POST /admin/realms/[realm]/users`
 
 ## Usage
@@ -79,6 +80,9 @@ Tested with Node.js 8.x, 10.x, 12.x, 13.x
        getUser: (instance, request) => {
            // might be null if not authorized
            console.log(request.user);
+           return [500, ""];
+       },
+       deleteUser: (instance, request) => {
            return [500, ""];
        },
        getUserInfoView: (instance, request) => {

@@ -1,15 +1,15 @@
 import { ViewFn } from "../types";
 
 const getUser: ViewFn = (instance, request) => {
-  const { user } = request;
-  if (!user) {
+  const { user: requestUser } = request;
+  if (!requestUser) {
     return [403, "Access denied"];
   }
 
   return [
     200,
     {
-      ...user.profile,
+      ...requestUser.profile,
       // TODO: make these configurable
       disableableCredentialTypes: ["password"],
       requiredActions: [],

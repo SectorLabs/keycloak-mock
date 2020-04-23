@@ -2,12 +2,12 @@ import { ViewFn } from "../types";
 import { MockInstance } from "../instance";
 
 const getUserInfo: ViewFn = (instance, request) => {
-  const { user } = request;
-  if (!user) {
+  const { user: requestUser } = request;
+  if (!requestUser) {
     return [403, "Access denied"];
   }
 
-  const { profile } = user;
+  const { profile } = requestUser;
 
   return [
     200,

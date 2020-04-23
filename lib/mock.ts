@@ -1,12 +1,13 @@
 import qs from "qs";
 import nock, { Scope } from "nock";
 
-import { NockClientRequest, ViewFn, PostViewFn } from "./types";
+import { NockClientRequest, ViewFn, DeleteViewFn, PostViewFn } from "./types";
 import { MockInstance } from "./instance";
 import { decodeTokenAndAttachUser } from "./middlewares";
 import {
   listCertificates,
   getUser,
+  deleteUser,
   getUserInfo,
   createToken,
   createUser,
@@ -23,6 +24,7 @@ export interface Mock {
 export interface MockOptions {
   listCertificatesView?: ViewFn;
   getUserView?: ViewFn;
+  deleteUserView?: DeleteViewFn;
   getUserInfoView?: ViewFn;
   listUsersView?: ViewFn;
   createTokenView?: PostViewFn;
@@ -71,6 +73,16 @@ const activateMock = (instance: MockInstance, options?: MockOptions): Mock => {
       }
 
       return getUser(instance, this.req);
+    })
+    .delete(new RegExp(`/admin/realms/${realm}/users/(.+)`))
+    .reply(async function() {
+      await decodeTokenAndAttachUser(instance, this.req);
+
+      if (options && options.deleteUserView) {
+        return options.deleteUserView(instance, this.req);
+      }
+
+      return deleteUser(instance, this.req);
     })
     .get(`/realms/${realm}/protocol/openid-connect/userinfo`)
     .reply(async function() {

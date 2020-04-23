@@ -110,6 +110,15 @@ class MockDatabase {
   }
 
   /**
+   * Deletes a user by ID.
+   */
+  deleteUserByID(id: string): void {
+    this.users = this.users.filter(
+      (storedUser) => storedUser.profile.id !== id
+    );
+  }
+
+  /**
    * Attempts to match against a user with the specified
    * username and password.
    */

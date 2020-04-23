@@ -4,8 +4,8 @@ import qs from "qs";
 import { ViewFn } from "../types";
 
 const listUsers: ViewFn = (instance, request) => {
-  const { user } = request;
-  if (!user) {
+  const { user: requestUser } = request;
+  if (!requestUser) {
     return [403, "Access denied"];
   }
 
