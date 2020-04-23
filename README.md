@@ -82,6 +82,9 @@ Tested with Node.js 8.x, 10.x, 12.x, 13.x
        getUserInfoView: (instance, request) => {
            return [500, ""];
        },
+       listUsers: (instance, request) => {
+           return [500, ""];
+       },
        createTokenView: (instance, request, body) => {
            return [500, ""];
        },

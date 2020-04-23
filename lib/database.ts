@@ -54,6 +54,16 @@ class MockDatabase {
   }
 
   /**
+   * Gets all users (except service users).
+   */
+  allUsers(): MockUser[] {
+    return this.users.filter(
+      (storedUser) =>
+        storedUser.profile.email !== MockDatabase.SERVICE_USER_EMAIL
+    );
+  }
+
+  /**
    * Finds the service account user if any exists.
    */
   findServiceUser(): MockUser | null {

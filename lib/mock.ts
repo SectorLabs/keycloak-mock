@@ -10,6 +10,7 @@ import {
   getUserInfo,
   createToken,
   createUser,
+  listUsers,
 } from "./views";
 
 let __activeMocks__: Map<string, Mock> = new Map<string, Mock>();
@@ -23,6 +24,7 @@ export interface MockOptions {
   listCertificatesView?: ViewFn;
   getUserView?: ViewFn;
   getUserInfoView?: ViewFn;
+  listUsersView?: ViewFn;
   createTokenView?: PostViewFn;
   createUserView?: PostViewFn;
 }
@@ -79,6 +81,16 @@ const activateMock = (instance: MockInstance, options?: MockOptions): Mock => {
       }
 
       return getUserInfo(instance, this.req);
+    })
+    .get(`/admin/realms/${realm}/users`)
+    .reply(async function() {
+      await decodeTokenAndAttachUser(instance, this.req);
+
+      if (options && options.listUsersView) {
+        return options.listUsersView(instance, this.req);
+      }
+
+      return listUsers(instance, this.req);
     })
     .post(`/realms/${realm}/protocol/openid-connect/token`)
     .reply(async function(uri, body) {

@@ -1,0 +1,31 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`listUsers works with token 1`] = `
+Array [
+  Object {
+    "access": Object {
+      "impersonate": false,
+      "manage": true,
+      "manageGroupMembership": true,
+      "mapRoles": true,
+      "view": true,
+    },
+    "attributes": Object {},
+    "createdTimestamp": 1,
+    "disableableCredentialTypes": Array [
+      "password",
+    ],
+    "email": "henk@gmail.com",
+    "emailVerified": true,
+    "enabled": true,
+    "federatedIdentities": Array [],
+    "firstName": "Henk",
+    "id": 1,
+    "lastName": "Jansen",
+    "notBefore": 0,
+    "requiredActions": Array [],
+    "totp": true,
+    "username": "henk@gmail.com",
+  },
+]
+`;
