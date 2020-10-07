@@ -23,6 +23,10 @@ export interface MockInstanceParams {
   realm: string;
 }
 
+export interface BearerTokenOptions {
+  audience?: string | string[];
+}
+
 class MockInstance {
   store: JWK.KeyStore;
   defaultKey: JWK.Key;
@@ -45,7 +49,11 @@ class MockInstance {
     return `${this.params.authServerURL}${path}`;
   }
 
-  createBearerToken(sub: string, expiresIn: number = 3600): string {
+  createBearerToken(
+    sub: string,
+    expiresIn: number = 3600,
+    options: BearerTokenOptions = {}
+  ): string {
     const user = this.database.findUserByID(sub);
     if (!user) {
       throw new Error("Cannot create bearer token for non-existent user");
@@ -58,6 +66,7 @@ class MockInstance {
       realm: this.params.realm,
       clientID: this.params.clientID,
       authServerURL: this.params.authServerURL,
+      audience: options.audience,
     });
   }
 }
