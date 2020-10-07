@@ -1,6 +1,6 @@
 {
   "name": "keycloak-mock",
-  "version": "1.0.9",
+  "version": "1.0.10",
   "description": "Keycloak server mock for Node.js",
   "main": "dist/index.js",
   "repository": "https://github.com/SectorLabs/keycloak-mock",
