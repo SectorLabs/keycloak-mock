@@ -25,6 +25,7 @@ export interface MockInstanceParams {
 
 export interface BearerTokenOptions {
   audience?: string | string[];
+  roles?: string[];
 }
 
 class MockInstance {
@@ -67,6 +68,7 @@ class MockInstance {
       clientID: this.params.clientID,
       authServerURL: this.params.authServerURL,
       audience: options.audience,
+      roles: options.roles,
     });
   }
 }
