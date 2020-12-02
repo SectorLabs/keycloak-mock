@@ -13,6 +13,7 @@ export interface CreateTokenOptions {
   clientID: string;
   authServerURL: string;
   audience?: string | string[];
+  roles?: string[];
 }
 
 const createBearerToken = (options: CreateTokenOptions): string => {
@@ -29,6 +30,9 @@ const createBearerToken = (options: CreateTokenOptions): string => {
       sub: options.user.profile.id,
       azp: options.clientID,
       session_state: uuidv4(),
+      ...(options.roles && {
+        resource_access: { [options.clientID]: { roles: options.roles } },
+      }),
     },
     options.key.toPEM(true),
     {
