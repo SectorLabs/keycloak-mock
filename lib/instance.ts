@@ -25,6 +25,8 @@ export interface MockInstanceParams {
 
 export interface BearerTokenOptions {
   audience?: string | string[];
+  roles?: string[];
+  realmRoles?: string[];
 }
 
 class MockInstance {
@@ -67,6 +69,8 @@ class MockInstance {
       clientID: this.params.clientID,
       authServerURL: this.params.authServerURL,
       audience: options.audience,
+      roles: options.roles,
+      realmRoles: options.realmRoles
     });
   }
 }
