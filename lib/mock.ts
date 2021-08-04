@@ -55,7 +55,7 @@ const activateMock = (instance: MockInstance, options?: MockOptions): Mock => {
   const scope = nock(authServerURL)
     .persist()
     .get(`/realms/${realm}/protocol/openid-connect/certs`)
-    .reply(async function() {
+    .reply(async function () {
       await decodeTokenAndAttachUser(instance, this.req);
 
       if (options && options.listCertificatesView) {
@@ -65,7 +65,7 @@ const activateMock = (instance: MockInstance, options?: MockOptions): Mock => {
       return listCertificates(instance, this.req);
     })
     .get(new RegExp(`/admin/realms/${realm}/users/(.+)`))
-    .reply(async function() {
+    .reply(async function () {
       await decodeTokenAndAttachUser(instance, this.req);
 
       if (options && options.getUserView) {
@@ -75,7 +75,7 @@ const activateMock = (instance: MockInstance, options?: MockOptions): Mock => {
       return getUser(instance, this.req);
     })
     .delete(new RegExp(`/admin/realms/${realm}/users/(.+)`))
-    .reply(async function() {
+    .reply(async function () {
       await decodeTokenAndAttachUser(instance, this.req);
 
       if (options && options.deleteUserView) {
@@ -85,7 +85,7 @@ const activateMock = (instance: MockInstance, options?: MockOptions): Mock => {
       return deleteUser(instance, this.req);
     })
     .get(`/realms/${realm}/protocol/openid-connect/userinfo`)
-    .reply(async function() {
+    .reply(async function () {
       await decodeTokenAndAttachUser(instance, this.req);
 
       if (options && options.getUserInfoView) {
@@ -96,7 +96,7 @@ const activateMock = (instance: MockInstance, options?: MockOptions): Mock => {
     })
     .get(`/admin/realms/${realm}/users`)
     .query(() => true)
-    .reply(async function() {
+    .reply(async function () {
       await decodeTokenAndAttachUser(instance, this.req);
 
       if (options && options.listUsersView) {
@@ -106,7 +106,7 @@ const activateMock = (instance: MockInstance, options?: MockOptions): Mock => {
       return listUsers(instance, this.req);
     })
     .post(`/realms/${realm}/protocol/openid-connect/token`)
-    .reply(async function(uri, body) {
+    .reply(async function (uri, body) {
       const decodedBody = decodeBody(this.req, body);
 
       if (options && options.createTokenView) {
@@ -116,7 +116,7 @@ const activateMock = (instance: MockInstance, options?: MockOptions): Mock => {
       return createToken(instance, this.req, decodedBody);
     })
     .post(`/admin/realms/${realm}/users`)
-    .reply(async function(uri, body) {
+    .reply(async function (uri, body) {
       const decodedBody = decodeBody(this.req, body);
 
       await decodeTokenAndAttachUser(instance, this.req);
