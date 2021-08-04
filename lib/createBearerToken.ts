@@ -1,5 +1,5 @@
 import { v4 as uuidv4 } from "uuid";
-import jwt from "jsonwebtoken";
+import jwt, { SignOptions } from "jsonwebtoken";
 
 import { JWK } from "node-jose";
 
@@ -13,11 +13,21 @@ export interface CreateTokenOptions {
   clientID: string;
   authServerURL: string;
   audience?: string | string[];
+  roles?: string[];
 }
 
 const createBearerToken = (options: CreateTokenOptions): string => {
   const timestamp = Math.floor(Date.now() / 1000);
   const expiresAt = timestamp + options.expiresIn;
+
+  const sign_options = {
+    algorithm: "RS256",
+    header: {
+      typ: "JWT",
+      kid: options.key.kid,
+    },
+    ...(options.audience && { audience: options.audience }),
+  } as SignOptions;
 
   return jwt.sign(
     {
@@ -29,16 +39,12 @@ const createBearerToken = (options: CreateTokenOptions): string => {
       sub: options.user.profile.id,
       azp: options.clientID,
       session_state: uuidv4(),
+      ...(options.roles && {
+        resource_access: { [options.clientID]: { roles: options.roles } },
+      }),
     },
     options.key.toPEM(true),
-    {
-      algorithm: "RS256",
-      header: {
-        typ: "JWT",
-        kid: options.key.kid,
-      },
-      ...(options.audience && { audience: options.audience }),
-    }
+    sign_options
   );
 };
 

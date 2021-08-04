@@ -34,6 +34,7 @@ describe("createBearerToken", () => {
       clientID: "client",
       authServerURL: "https://example.com",
       audience: "test",
+      roles: ["admin"],
     };
 
     const token = createBearerToken(createTokenOptions);
@@ -44,6 +45,9 @@ describe("createBearerToken", () => {
     expect(decodedToken.payload.typ).toBe("Bearer");
     expect(decodedToken.payload.azp).toBe(createTokenOptions.clientID);
     expect(decodedToken.payload.aud).toBe(createTokenOptions.audience);
+    expect(decodedToken.payload.resource_access).toStrictEqual({
+      client: { roles: ["admin"] },
+    });
     expect(decodedToken.payload.iss).toBe(
       `${createTokenOptions.authServerURL}/realms/${createTokenOptions.realm}`
     );
