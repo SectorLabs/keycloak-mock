@@ -3,7 +3,7 @@ name: build and Release
 on:  
   push:
     branches:
-      - master
+      - test
 
 jobs:
   test:
@@ -26,6 +26,8 @@ jobs:
     - name: Run build
       run: yarn prepack
     
-    - name: Automatic GitHub Release
-      uses: justincy/github-action-npm-release@2.0.1
-      id: release
+    - uses: "marvinpinto/action-automatic-releases@latest"
+      with:
+        repo_token: "${{ secrets.GITHUB_TOKEN }}"
+        automatic_release_tag: "latest"
+        prerelease: false
