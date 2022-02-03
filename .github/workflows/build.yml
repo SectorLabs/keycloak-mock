@@ -3,7 +3,7 @@ name: build and Release
 on:  
   push:
     branches:
-      - test
+      - master
 
 jobs:
   test:
@@ -29,5 +29,4 @@ jobs:
     - uses: "marvinpinto/action-automatic-releases@latest"
       with:
         repo_token: "${{ secrets.GITHUB_TOKEN }}"
-        automatic_release_tag: "latest"
         prerelease: false
