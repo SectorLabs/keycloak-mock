@@ -1,0 +1,29 @@
+name: build and Release 
+
+on:  
+  push:
+    branches:
+      - master
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Git checkout 
+      uses: actions/checkout@v2
+
+    - uses: actions/cache@v2
+      with:
+        path: '**/node_modules'
+        key: ${{ runner.os }}-modules-${{ hashFiles('**/yarn.lock') }}
+
+    - name: Install dependencies
+      run: yarn install
+    
+    - name: Run build
+      run: yarn prepack
+    
+    - name: Automatic GitHub Release
+      uses: justincy/github-action-npm-release@2.0.1
+      id: release
