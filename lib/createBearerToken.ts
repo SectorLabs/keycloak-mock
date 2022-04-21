@@ -30,10 +30,11 @@ const createBearerToken = (options: CreateTokenOptions): string => {
       azp: options.clientID,
       session_state: uuidv4(),
     },
-    options.key.toPEM(true),
+    options.key.toPEM(true), 
     {
       algorithm: "RS256",
       header: {
+        alg: "RS256",
         typ: "JWT",
         kid: options.key.kid,
       },
