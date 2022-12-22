@@ -31,7 +31,7 @@
   },
   "dependencies": {
     "@types/lodash": "^4.14.149",
-    "jsonwebtoken": "^8.5.1",
+    "jsonwebtoken": "^9.0.0",
     "lodash": "^4.17.15",
     "nock": "^11.9.1",
     "node-jose": "^1.1.3",
